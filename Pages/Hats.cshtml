@@ -1,0 +1,38 @@
+﻿@page
+@model AlDentev2.Pages.HatsModel
+@{
+    ViewData["Title"] = "Czapki";
+}
+<div class="container mt-5">
+    <div class="row ">
+        <div class="col-sm-4 offset-sm-2 mt-5">
+            <div id="carouselControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active hat">
+                        <img class="d-block w-100" src="~/images/hat1.jpg" alt="First slide">
+                    </div>
+                    <div class="carousel-item hat">
+                        <img class="d-block w-100" src="~/images/hat4.jpg" alt="Second slide">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselControls" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </a>
+                <a class="carousel-control-next" href="#carouselControls" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-4 text-center align-content-center">
+            <h6>AL DENTE HAT WHITE</h6>
+            <p>99 PLN </p>
+            <p>Rozmiar:</p>
+            <button class="btn btn-outline-dark" type="button">S</button>
+            <button class="btn btn-outline-dark" type="button">M</button>
+            <button class="btn btn-outline-dark" type="button">L</button>
+            <br />
+            <button class="btn btn-dark mt-4" type="button">Dodaj do koszyka</button>
+        </div>
+
+    </div>
+</div>

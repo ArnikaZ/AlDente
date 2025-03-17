@@ -1,0 +1,92 @@
+*{
+    box-sizing: border-box;
+    font-family: Montserrat, sans-serif;
+}
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #d3d3d3;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.logo{
+    font-size: 30px;
+    letter-spacing: 5px;
+    font-weight: 300 !important; 
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    /* Zwiêkszenie szerokoœci i wysokoœci */
+    width: 3rem;
+    height: 3rem;
+    /* Ikona w tle zajmuje tylko czêœæ kontenera */
+    background-size: 50%, 50%;
+    /* Nadanie pó³przezroczystego czarnego t³a */
+    background-color: rgba(0, 0, 0, 0.3);
+    /* Zaokr¹glenie, aby uzyskaæ kszta³t kó³ka */
+    border-radius: 50%;
+    
+}
+.hat {
+    height: 500px;
+}
+
+    .hat img {
+        width: 100%; /* Zajmuj ca³¹ szerokoœæ slajdu */
+        height: 100%; /* Zajmuj ca³¹ wysokoœæ slajdu */
+        object-fit: cover;
+    }
+
+.instagram{
+    color: black;
+    font-size: 20px;
+    letter-spacing: 3px;
+    
+    
+}
+
+/* Usuwamy standardow¹ liniê pod nav-tabs */
+.nav-tabs {
+    border-bottom: none;
+}
+
+    /* Styl linków w zak³adkach */
+    .nav-tabs .nav-link {
+        border: none; /* Usuwamy obramowanie zak³adek */
+        text-transform: uppercase; /* Du¿e litery */
+        color: #000; /* Kolor tekstu */
+        font-weight: 600; /* Trochê pogrubiamy */
+        margin-right: 20px; /* Odstêp poziomy miêdzy zak³adkami */
+        padding-bottom: 10px;
+    }
+
+        /* Hover, ¿eby nie pojawia³y siê linie i podkreœlenia */
+        .nav-tabs .nav-link:hover {
+            border: none;
+            color: #333;
+        }
+
+        /* Podkreœlenie aktywnej zak³adki grubsz¹ czarn¹ lini¹ */
+        .nav-tabs .nav-link.active {
+            border-bottom: 3px solid #000;
+            color: #000;
+        }
+
+.text-justify {
+    text-align: justify;
+}

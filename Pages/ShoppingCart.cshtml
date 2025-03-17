@@ -1,0 +1,145 @@
+﻿@page
+@model AlDentev2.Pages.ShoppingCartModel
+@{
+    ViewData["Title"] = "Koszyk";
+}
+
+
+<div class="container mt-5">
+    <div class="row">
+    <h4 class="mb-4 mt-5">Twój koszyk</h4>
+
+    <!-- Tabela produktów -->
+    <div class="table-responsive">
+        <table class="table cart-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Produkt</th>
+                    <th scope="col" class="text-center">Rozmiar</th>
+                    <th scope="col" class="text-center">Cena</th>
+                    <th scope="col" class="text-center">Ilość</th>
+                    <th scope="col" class="text-center">Suma</th>
+                    <th scope="col" class="text-center">Usuń</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Przykładowa pozycja w koszyku -->
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <!-- Miniaturka produktu -->
+                            <img src="~/images/1.jpg"
+                                 alt="Miniatura"
+                                 class="img-thumbnail me-3"
+                                 style="width:80px; height:80px; object-fit:cover;">
+                            <!-- Nazwa + link do produktu -->
+                            <div>
+                                <a href="#" class="text-decoration-none text-black fw-semibold">
+                                    AL DENTE HOODIE WHITE
+                                </a>
+                                <p class="mb-0 text-muted small">Kod produktu: XYZ-123</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">M</td>
+                    <td class="text-center">199,00 zł</td>
+                    <td class="text-center" style="max-width:120px;">
+                        <input type="number"
+                               class="form-control text-center"
+                               value="1"
+                               min="1"
+                               style="width:80px; display:inline-block;">
+                    </td>
+                    <td class="text-center">199,00 zł</td>
+                    <td class="text-center">
+                        <button type="button" class="btn remove-btn p-0" title="Usuń produkt">
+                                <i class="bi bi-x-square fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Przykładowa druga pozycja w koszyku -->
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="~/images/4.jpg"
+                                 alt="Miniatura"
+                                 class="img-thumbnail me-3"
+                                 style="width:80px; height:80px; object-fit:cover;">
+                            <div>
+                                <a href="#" class="text-decoration-none text-black fw-semibold">
+                                    AL DENTE T-SHIRT WHITE
+                                </a>
+                                <p class="mb-0 text-muted small">Kod produktu: ABC-999</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">M</td>
+                    <td class="text-center">199,00 zł</td>
+                    <td class="text-center" style="max-width:120px;">
+                        <input type="number"
+                               class="form-control text-center"
+                               value="2"
+                               min="1"
+                               style="width:80px; display:inline-block;">
+                    </td>
+                    <td class="text-center">198,00 zł</td>
+                    <td class="text-center">
+                        <button type="button" class="btn remove-btn p-0" title="Usuń produkt">
+                                <i class="bi bi-x-square fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Więcej wierszy, w zależności od zawartości koszyka -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Kod rabatowy + przycisk aktualizacji koszyka -->
+    <div class="row gy-4 justify-content-between">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Wpisz kod rabatowy...">
+                <button class="btn btn-dark" type="button">Zastosuj</button>
+            </div>
+        </div>
+        <div class="col-md-3 text-end">
+            <button class="btn btn-dark" type="button">
+                Zaktualizuj koszyk
+            </button>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Podsumowanie zamówienia -->
+    <div class="row justify-content-end">
+        <div class="col-md-6 col-lg-4">
+            <div class="border p-3 rounded-2">
+                <h5 class="mb-3">Podsumowanie</h5>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>Suma produktów:</span>
+                    <span>280,00 zł</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>Koszt dostawy:</span>
+                    <span>15,00 zł</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>Zniżka:</span>
+                    <span>- 20,00 zł</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <strong>Do zapłaty:</strong>
+                    <strong>275,00 zł</strong>
+                </div>
+                <button class="btn btn-dark w-100" type="button">
+                    Przejdź do płatności
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

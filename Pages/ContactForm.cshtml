@@ -1,0 +1,39 @@
+﻿@page
+@model AlDentev2.Pages.ContactFormModel
+@{
+    ViewData["Title"] = "Kontakt";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5 offset-1 mt-5 custom-height">
+            <video class="img-fluid">
+                <source src="~/images/9.MP4" type="video/mp4" />
+            </video>
+        </div>
+        <div class="col-md-6 mt-5 ">
+            <h5 class="text-center my-5">Kontakt</h5>
+            <form>
+                <div class="form-group">
+                    <label class="mb-1" for="NameSurname">Imię i nazwisko</label>
+                    <input type="text" class="form-control" id="NameSurname" required>
+                </div>
+                <div class="form-group my-4">
+                    <label class="mb-1" for="Email">Adres e-mail</label>
+                    <input type="text" class="form-control" id="Email" required>
+                </div>
+                <div class="form-group my-4">
+                    <label class="mb-1" for="Topic">Temat</label>
+                    <input type="text" class="form-control" id="Topic" required>
+                </div>
+                <div class="form-group my-4">
+                    <label class="mb-1" for="ContactText">Treść wiadomości</label>
+                    <textarea class="form-control" id="ContactText" rows="4" required></textarea>
+                </div>
+                <div class="form-group text-center my-4">
+                    <button class="btn btn-dark" type="submit">Wyślij</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

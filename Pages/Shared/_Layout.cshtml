@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AlDentev2</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AlDentev2.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-light bg-white border fixed-top">
+            <div class="container-fluid ">
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <a class="navbar-brand mx-auto my-auto logo" asp-page="/Index">AL DENTE</a>
+
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Sklep</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" asp-page="/Index">Nowości</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Hoodies">Bluzy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Shirts">Koszulki</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Hats">Czapki</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Bags">Torby</a>
+                            </li><hr />
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/About">O marce</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/ContactForm">Kontakt</a>
+                            </li>
+                
+                        </ul><hr />
+                        <form class="d-flex mt-3" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Szukaj" aria-label="Search">
+                            <button class="btn btn-outline-dark" type="submit">Szukaj</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <a class="text-decoration-none text-black me-4" asp-page="/ShoppingCart">
+                        <i class="bi bi-bag fs-5"></i>
+                    </a>
+                    <a class="text-decoration-none text-black me-3" asp-page="/LoginPage">
+                        <i class="bi bi-person fs-4"></i>
+                    </a>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer  mt-3">
+        <div class="container">
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <h6 class="mb-3">Informacje</h6>
+                    <a class="text-decoration-none text-muted" href=""><p>Koszt i czas wysyłki</p></a>
+                    <a class="text-decoration-none text-muted" href=""><p>Zwroty i reklamacje</p></a>
+
+                </div>
+                <div class="col-md-4">
+                    <h6 class="mb-3">Regulaminy</h6>
+                    <a class="text-decoration-none text-muted" href=""><p>Regulamin</p></a>
+                    <a class="text-decoration-none text-muted" href=""><p>Polityka prywatności</p></a>
+                    <a class="text-decoration-none text-muted" href=""><p>Ustawienia plików cookies</p></a>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="mb-3">Kontakt</h6>
+                    <p class="text-muted"><i class="bi bi-envelope"></i> aldente@gmail.com</p>
+                    <p><a class="text-decoration-none text-muted mb-3" href=""><i class="bi bi-instagram"></i> linguadelglutine</a></p>
+                    <p><a class="text-decoration-none text-muted " asp-page="/ContactForm"><i class="bi bi-envelope-paper"></i> formularz kontaktowy</a></p>
+                </div>
+            </div>
+            &copy; 2025 - Al Dente
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeIv8MqAAAAACggo_Ey6hGPgO39ByeaQaNsIdiH"></script>
+    
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
