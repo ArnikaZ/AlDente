@@ -1,8 +1,11 @@
+using AlDentev2.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace AlDentev2
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -10,7 +13,25 @@ namespace AlDentev2
             // Add services to the container.
             builder.Services.AddRazorPages();
 
+            //dodanie kontekstu bazy danych
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
+
+            //inicializacja bazy danych przy starcie aplikacji
+            using(var scope = app.Services.CreateScope()) //tworzy nowy zakres us³ug (otwarcie nowej sesji)
+            {
+                var services = scope.ServiceProvider; //pobiera dostawcê uslug
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>(); //pobranie kontekstu bazy danych
+                    await DbInitializer.InitializeAsync(context); //tworzy bazê danych jeœli nie istnieje i dodaje pocz¹tkowe dane
+                }
+                catch(Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Error in initializing database");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
