@@ -1,4 +1,5 @@
 using AlDentev2.Data;
+using AlDentev2.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlDentev2
@@ -15,6 +16,22 @@ namespace AlDentev2
 
             //dodanie kontekstu bazy danych
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            //rejestracja repozytoriów
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+            //konfiguracja obs³ugi sesji
+            builder.Services.AddDistributedMemoryCache(); //do przechwywania danych w sesji
+            builder.Services.AddSession(options => //w³¹cza obs³ugê sesji w aplikacji
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); //czas wygaœniêcia sesji
+                options.Cookie.HttpOnly = true; //Zabezpiecza plik cookie sesji przed dostêpem po stronie klienta (skrypty JavaScript-zmiejsza ryzyko XSS)
+                options.Cookie.IsEssential = true; // Oznacza plik cookie sesji jako niezbêdny
+            });
+            
             var app = builder.Build();
 
             //inicializacja bazy danych przy starcie aplikacji
