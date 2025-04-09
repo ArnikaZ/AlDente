@@ -61,7 +61,7 @@ namespace AlDentev2.Repositories
         public async Task<IEnumerable<Address>> GetUserAddressesAsync(int userId)
         {
             return await _context.Addresses
-                .Where(a => userId == userId)
+                .Where(a => a.UserId == userId)
                 .OrderByDescending(a => a.IsDefault)
                 .ToListAsync();
         }

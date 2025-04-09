@@ -14,6 +14,7 @@ namespace AlDentev2.Data
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Size> Sizes { get; set; } = null!;
         public DbSet<ProductSize> ProductSizes { get; set; } = null!;
+        public DbSet<ProductImage> ProductImages { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Address> Addresses { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
@@ -119,6 +120,12 @@ namespace AlDentev2.Data
                 .HasForeignKey(ci => ci.UserId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false); // Wskazuje, że UserId może być null
+
+            modelBuilder.Entity<ProductImage>()
+                .HasOne(pi => pi.Product)
+                .WithMany(p => p.ProductImages)
+                .HasForeignKey(pi => pi.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Dodatkowe indeksy
             modelBuilder.Entity<CartItem>()

@@ -22,6 +22,7 @@ namespace AlDentev2
             builder.Services.AddScoped<ICartRepository, CartRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IShippingMethodRepository, ShippingMethodRepository>();
 
             //konfiguracja obs³ugi sesji
             builder.Services.AddDistributedMemoryCache(); //do przechwywania danych w sesji
@@ -41,6 +42,7 @@ namespace AlDentev2
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>(); //pobranie kontekstu bazy danych
+                    context.Database.EnsureDeleted();
                     await DbInitializer.InitializeAsync(context); //tworzy bazê danych jeœli nie istnieje i dodaje pocz¹tkowe dane
                 }
                 catch(Exception ex)
@@ -62,6 +64,7 @@ namespace AlDentev2
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 

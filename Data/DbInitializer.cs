@@ -1,4 +1,5 @@
 ﻿using AlDentev2.Models;
+using AlDentev2.Pages;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlDentev2.Data
@@ -41,7 +42,7 @@ namespace AlDentev2.Data
                     Name="AL DENTE HOODIE WHITE",
                     Description="Biała bluza z kapturem z logo AL DENTE",
                     Price=399.00M,
-                    ImageUrl="/images/hero2.jpg",
+                    ImageUrl="/images/hoodie-white1.jpg",
                     CategoryId=categories.First(c=>c.Name=="Bluzy").Id,
                     SKU="HOO-WHT-001"
                 },
@@ -50,7 +51,7 @@ namespace AlDentev2.Data
                     Name="AL DENTE HOODIE BLACK",
                     Description="Czarna bluza z kapturem z logo AL DENTE",
                     Price=399.00M,
-                    ImageUrl="/images/hoodie2.jpg",
+                    ImageUrl="/images/hoodie-black1.jpg",
                     CategoryId=categories.First(c=>c.Name=="Bluzy").Id,
                     SKU="HOO-BLK-001"
                 },
@@ -77,7 +78,7 @@ namespace AlDentev2.Data
                     Name="AL DENTE T-SHIRT WHITE",
                     Description="Biały t-shirt z logo AL DENTE",
                     Price=199.00M,
-                    ImageUrl="/images/shirt-1.jpg",
+                    ImageUrl="/images/shirt-white1.jpg",
                     CategoryId=categories.First(c=>c.Name=="Koszulki").Id,
                     SKU="TSH-WHT-001"
                 },
@@ -95,7 +96,7 @@ namespace AlDentev2.Data
                     Name = "AL DENTE BAG WHITE",
                     Description = "Biała torba z logo AL DENTE",
                     Price = 99.00M,
-                    ImageUrl = "/images/bag7.jpg",
+                    ImageUrl = "/images/bag-white1.jpg",
                     CategoryId = categories.First(c => c.Name == "Torby").Id,
                     SKU = "BAG-WHT-001"
                 },
@@ -104,12 +105,174 @@ namespace AlDentev2.Data
                     Name = "AL DENTE BAG BLACK",
                     Description = "Czarna torba z logo AL DENTE",
                     Price = 99.00M,
-                    ImageUrl = "/images/bag1.jpg",
+                    ImageUrl = "/images/bag-black1.jpg",
                     CategoryId = categories.First(c => c.Name == "Torby").Id,
                     SKU = "BAG-BLK-001"
                 }
             };
             await context.Products.AddRangeAsync(products);
+            await context.SaveChangesAsync();
+
+            var productImages = new List<ProductImage>();
+            foreach(var product in products)
+            {
+                productImages.Add(new ProductImage
+                {
+                    ProductId = product.Id,
+                    ImageUrl = product.ImageUrl,
+                    IsMain = true,
+                    DisplayOrder = 0
+                });
+                if (product.CategoryId == categories.First(c => c.Name == "Bluzy").Id)
+                {
+                    if (product.Name.Contains("OFF-WHITE")) 
+                    {
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/hoodie-offwhite2.jpg",
+                            DisplayOrder = 1
+                        });
+                        
+                    }
+                    else if (product.Name.Contains("BLACK"))
+                    {
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/hoodie-black2.jpg",
+                            DisplayOrder = 1
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/hoodie-black3.jpg",
+                            DisplayOrder = 2
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/hoodie-black4.jpg",
+                            DisplayOrder = 3
+                        });
+                    }
+                    else if (product.Name.Contains("WHITE"))
+                    {
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/hoodie-white2.jpg",
+                            DisplayOrder = 1
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/hoodie-white3.jpg",
+                            DisplayOrder = 2
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/hoodie-white4.jpg",
+                            DisplayOrder = 3
+                        });
+                    }
+                }
+                else if((product.CategoryId == categories.First(c => c.Name == "Koszulki").Id))
+                {
+                    if (product.Name.Contains("WHITE"))
+                    {
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/shirt-white2.jpg",
+                            DisplayOrder = 1
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/shirt-white3.jpg",
+                            DisplayOrder = 2
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/shirt-white4.jpg",
+                            DisplayOrder = 3
+                        });
+                    }
+                    else if (product.Name.Contains("BLACK"))
+                    {
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/shirt-black1.jpg",
+                            DisplayOrder = 1
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/shirt-black2.jpg",
+                            DisplayOrder = 2
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/shirt-black3.jpg",
+                            DisplayOrder = 3
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/shirt-black4.jpg",
+                            DisplayOrder = 4
+                        });
+                    }
+                }
+                else if ((product.CategoryId == categories.First(c => c.Name == "Czapki").Id))
+                {
+                    productImages.Add(new ProductImage
+                    {
+                        ProductId = product.Id,
+                        ImageUrl = "/images/hat2.jpg",
+                        DisplayOrder = 1
+                    });
+                    productImages.Add(new ProductImage
+                    {
+                        ProductId = product.Id,
+                        ImageUrl = "/images/hat3.jpg",
+                        DisplayOrder = 1
+                    });
+                }
+                else if ((product.CategoryId == categories.First(c => c.Name == "Torby").Id))
+                {
+                    if (product.Name.Contains("WHITE"))
+                    {
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/bag-white2.jpg",
+                            DisplayOrder=1
+                        });
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/bag-white3.jpg",
+                            DisplayOrder = 2
+                        });
+                    }
+                    else if (product.Name.Contains("BLACK"))
+                    {
+                        productImages.Add(new ProductImage
+                        {
+                            ProductId = product.Id,
+                            ImageUrl = "/images/bag-black2.jpg",
+                            DisplayOrder = 1
+                        });
+                    }
+                }
+            }
+            await context.ProductImages.AddRangeAsync(productImages);
             await context.SaveChangesAsync();
 
             var productSizes = new List<ProductSize>();

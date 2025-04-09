@@ -21,6 +21,7 @@ namespace AlDentev2.Models
         public decimal Price { get; set; }
 
         public string? ImageUrl { get; set; }
+        public ICollection<ProductImage>? ProductImages { get; set; }
 
         [Required]
         public int CategoryId { get; set; }

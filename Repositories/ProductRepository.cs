@@ -25,6 +25,7 @@ namespace AlDentev2.Repositories
             return await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.ProductSizes).ThenInclude(ps => ps.Size)
+                .Include(p=>p.ProductImages)
                 .Where(p => p.Category.Name == categoryName)
                 .ToListAsync();
         }
@@ -34,6 +35,7 @@ namespace AlDentev2.Repositories
             return await _context.Products
                 .Include(p=>p.Category)
                 .Include(p=>p.ProductSizes).ThenInclude(ps=>ps.Size)
+                .Include(p=>p.ProductImages)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
