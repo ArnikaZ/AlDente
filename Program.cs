@@ -13,6 +13,7 @@ namespace AlDentev2
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            
 
             //dodanie kontekstu bazy danych
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -24,7 +25,7 @@ namespace AlDentev2
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IShippingMethodRepository, ShippingMethodRepository>();
 
-            //konfiguracja obs³ugi sesji
+            //konfiguracja obs³ugi sesji dla utrzymania stanu koszyka niezalogowanych u¿ytkowników
             builder.Services.AddDistributedMemoryCache(); //do przechwywania danych w sesji
             builder.Services.AddSession(options => //w³¹cza obs³ugê sesji w aplikacji
             {
@@ -69,6 +70,7 @@ namespace AlDentev2
             app.UseAuthorization();
 
             app.MapRazorPages();
+            
 
             app.Run();
         }
