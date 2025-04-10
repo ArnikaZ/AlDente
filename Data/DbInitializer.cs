@@ -66,21 +66,21 @@ namespace AlDentev2.Data
                 },
                 new Product
                 {
-                    Name="AL DENTE T-SHIRT BLACK",
-                    Description="Czarny t-shirt z logo AL DENTE",
-                    Price=199.00M,
-                    ImageUrl="/images/shirt-black.jpg",
-                    CategoryId=categories.First(c=>c.Name=="Koszulki").Id,
-                    SKU="TSH-BLK-001"
-                },
-                new Product
-                {
                     Name="AL DENTE T-SHIRT WHITE",
                     Description="Biały t-shirt z logo AL DENTE",
                     Price=199.00M,
                     ImageUrl="/images/shirt-white1.jpg",
                     CategoryId=categories.First(c=>c.Name=="Koszulki").Id,
                     SKU="TSH-WHT-001"
+                },
+                new Product
+                {
+                    Name="AL DENTE T-SHIRT BLACK",
+                    Description="Czarny t-shirt z logo AL DENTE",
+                    Price=199.00M,
+                    ImageUrl="/images/shirt-black1.jpg",
+                    CategoryId=categories.First(c=>c.Name=="Koszulki").Id,
+                    SKU="TSH-BLK-001"
                 },
                  new Product
                 {
@@ -203,29 +203,18 @@ namespace AlDentev2.Data
                     }
                     else if (product.Name.Contains("BLACK"))
                     {
+                        
                         productImages.Add(new ProductImage
                         {
                             ProductId = product.Id,
-                            ImageUrl = "/images/shirt-black1.jpg",
+                            ImageUrl = "/images/shirt-black3.jpg",
                             DisplayOrder = 1
                         });
                         productImages.Add(new ProductImage
                         {
                             ProductId = product.Id,
-                            ImageUrl = "/images/shirt-black2.jpg",
-                            DisplayOrder = 2
-                        });
-                        productImages.Add(new ProductImage
-                        {
-                            ProductId = product.Id,
-                            ImageUrl = "/images/shirt-black3.jpg",
-                            DisplayOrder = 3
-                        });
-                        productImages.Add(new ProductImage
-                        {
-                            ProductId = product.Id,
                             ImageUrl = "/images/shirt-black4.jpg",
-                            DisplayOrder = 4
+                            DisplayOrder = 2
                         });
                     }
                 }

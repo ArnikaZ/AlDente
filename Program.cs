@@ -43,7 +43,7 @@ namespace AlDentev2
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>(); //pobranie kontekstu bazy danych
-                    context.Database.EnsureDeleted();
+                   context.Database.EnsureDeleted();
                     await DbInitializer.InitializeAsync(context); //tworzy bazê danych jeœli nie istnieje i dodaje pocz¹tkowe dane
                 }
                 catch(Exception ex)

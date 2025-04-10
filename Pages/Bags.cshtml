@@ -6,55 +6,115 @@
 
 <div class="container mt-5">
     <div class="row ">
-        <div class="col-sm-4 offset-sm-2 mt-5">
-            <div id="carouselControls" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active hat">
-                        <img class="d-block w-100" src="~/images/bag7.jpg" alt="First slide">
-                    </div>
-                    <div class="carousel-item hat">
-                        <img class="d-block w-100" src="~/images/bag5.jpg" alt="Second slide">
+        @if (!Model.Bags.Any())
+        {
+            <div class="col-12 mt-5 text-center">
+                <p>Brak dostępnych produktów w tej kategorii</p>
+            </div>
+        }
+        else
+        {
+            @foreach(var bag in Model.Bags)
+            {
+                <div class="col-sm-4 offset-sm-2 mt-5">
+                    <div id="carousel-@bag.Id" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @if(bag.ProductImages!=null && bag.ProductImages.Any())
+                            {
+                                var mainImage = bag.ProductImages.FirstOrDefault(pi => pi.IsMain) ?? bag.ProductImages.OrderBy(pi => pi.DisplayOrder).FirstOrDefault();
+                                var additionalImages = bag.ProductImages.Where(pi => pi != mainImage).OrderBy(pi => pi.DisplayOrder);
+                                <div class="carousel-item active">
+                                    <img class="img-fluid" src="@(mainImage?.ImageUrl ?? bag.ImageUrl)" alt="@bag.Name" />
+                                </div>
+                                @foreach(var image in additionalImages)
+                                {
+                                    <div class="carousel-item">
+                                        <img class="img-fluid" src="@image.ImageUrl" alt="@bag.Name" />
+                                    </div>
+                                }
+                            }
+                            else if(!string.IsNullOrEmpty(bag.ImageUrl)){
+                                <div class="carousel-item active">
+                                    <img class="img-fluid" src="@bag.ImageUrl" alt="@bag.Name" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="carousel-item active">
+                                    <img class="img-fluid" src="/images/placeholder.jpg" alt="Brak zdjęcia" />
+                                </div>
+                            }
+                        </div>
+                        @if ((bag.ProductImages!=null && bag.ProductImages.Count > 1) || (bag.ProductImages==null && !string.IsNullOrEmpty(bag.ImageUrl)))
+                        {
+                            <button type="button" class="carousel-control-prev" data-bs-target="#carousel-@bag.Id" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button type="button" class="carousel-control-next" data-bs-target="#carousel-@bag.Id" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        }
+                       
                     </div>
                 </div>
-                <a class="carousel-control-prev" href="#carouselControls" role="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </a>
-                <a class="carousel-control-next" href="#carouselControls" role="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-        <div class="col-sm-4 text-center align-content-center">
-            <h6>AL DENTE BAG WHITE</h6>
-            <p>99 PLN </p>
-            <button class="btn btn-dark mt-4" type="button">Dodaj do koszyka</button>
-        </div>
 
-
-        <div class="col-sm-4 offset-sm-2 my-3">
-            <div id="carouselControls2" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active hat">
-                        <img class="d-block w-100" src="~/images/bag1.jpg" alt="First slide">
+                <div class="col-md-4 text-center align-content-center">
+                    <h6>@bag.Name</h6>
+                    <p>@bag.Price.ToString("N2") PLN</p>
+                    <form method="post" asp-page="/AddToCart">
+                    <input type="hidden" name="ProductId" value="@bag.Id"/>
+                    <div class="mb-3">
+                        <label for="quantity-@bag.Id" class="visually-hidden">Ilość</label>
+                        <input type="number"
+                            id="quantity-@bag.Id"
+                            name="Quantity"
+                            class="form-control d-inline-block"
+                            value="1"
+                            min="1"
+                            max="10"
+                            style="width: 70px;" />
                     </div>
-                    <div class="carousel-item hat">
-                        <img class="d-block w-100" src="~/images/bag3.jpg" alt="Second slide">
-                    </div>
+                    <button class="btn btn-dark mt-2" type="submit" id="addToCartBtn-@bag.Id" disabled>
+                        Dodaj do koszyka
+                    </button>
+                    
+                    </form>
                 </div>
-                <a class="carousel-control-prev" href="#carouselControls2" role="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </a>
-                <a class="carousel-control-next" href="#carouselControls2" role="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-        <div class="col-sm-4 text-center align-content-center">
-            <h6>AL DENTE BAG BLACK</h6>
-            <p>99 PLN </p>
-            <button class="btn btn-dark mt-4" type="button">Dodaj do koszyka</button>
-        </div>
-
-
+            }
+           
+        }
+        
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        function selectSize(button, sizeId){
+         const form = button.closest('form');
+            const sizeButtons = form.querySelectorAll('button[data-size-id]');
+            const hiddenInput = form.querySelector('input[name="SizeId"]');
+            const addToCartBtn = form.querySelector('button[type="submit"]');
+
+            // Usuń klasę 'active' ze wszystkich przycisków
+            sizeButtons.forEach(btn => {
+                btn.classList.remove('btn-dark');
+                btn.classList.add('btn-outline-dark');
+            });
+
+            // Dodaj klasę 'active' do wybranego przycisku
+            const isAvailable = button.getAttribute('data-available') === 'true';
+            if (isAvailable) {
+                button.classList.remove('btn-outline-dark');
+                button.classList.add('btn-dark');
+
+                // Ustaw wartość ukrytego pola
+                hiddenInput.value = sizeId;
+
+                // Odblokuj przycisk "Dodaj do koszyka"
+                addToCartBtn.disabled = false;
+            }
+        }
+    </script>
+}
