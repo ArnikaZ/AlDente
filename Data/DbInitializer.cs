@@ -226,12 +226,7 @@ namespace AlDentev2.Data
                         ImageUrl = "/images/hat2.jpg",
                         DisplayOrder = 1
                     });
-                    productImages.Add(new ProductImage
-                    {
-                        ProductId = product.Id,
-                        ImageUrl = "/images/hat3.jpg",
-                        DisplayOrder = 1
-                    });
+                    
                 }
                 else if ((product.CategoryId == categories.First(c => c.Name == "Torby").Id))
                 {
