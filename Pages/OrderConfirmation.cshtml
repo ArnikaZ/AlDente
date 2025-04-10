@@ -1,0 +1,134 @@
+﻿@page
+@model AlDentev2.Pages.OrderConfirmationModel
+@{
+    ViewData["Title"] = "Potwierdzenie zamówienia";
+}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 mt-5">
+            @if (Model.StatusMessage != null)
+            {
+                <div class="alert alert-secondary mb-4">
+                    @Model.StatusMessage
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Dziękujemy za zamówienie!</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                        <h4 class="mt-3">Twoje zamówienie zostało przyjęte do realizacji</h4>
+                        <p>Numer zamówienia: <strong>@Model.Order?.Id</strong></p>
+                        <p>Data zamówienia: <strong>@Model.Order?.OrderDate.ToString("dd.MM.yyyy HH:mm")</strong></p>
+                    </div>
+
+                    <div class="border p-3 rounded mb-4">
+                        <h5 class="mb-3">Szczegóły zamówienia</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Produkt</th>
+                                        <th class="text-center">Rozmiar</th>
+                                        <th class="text-center">Ilość</th>
+                                        <th class="text-center">Cena</th>
+                                        <th class="text-end">Suma</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Order?.OrderItems != null)
+                                    {
+                                        foreach (var item in Model.Order.OrderItems)
+                                        {
+                                            <tr>
+                                                <td>@item.Product?.Name</td>
+                                                <td class="text-center">@item.Size?.Name</td>
+                                                <td class="text-center">@item.Quantity</td>
+                                                <td class="text-center">@item.UnitPrice.ToString("N2") zł</td>
+                                                <td class="text-end">@((item.UnitPrice * item.Quantity).ToString("N2")) zł</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-end">Suma produktów:</td>
+                                        <td class="text-end">
+                                            @(Model.Order?.OrderItems?.Sum(i => i.UnitPrice * i.Quantity).ToString("N2")) zł
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-end">Koszt dostawy:</td>
+                                        <td class="text-end">@Model.Order?.ShippingMethod?.Cost.ToString("N2") zł</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-end"><strong>Do zapłaty:</strong></td>
+                                        <td class="text-end"><strong>@Model.Order?.TotalAmount.ToString("N2") zł</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="border p-3 rounded mb-4">
+                                <h5 class="mb-3">Dane zamawiającego</h5>
+                                <p class="mb-1"><strong>Imię i nazwisko:</strong> @Model.Order?.User?.FirstName @Model.Order?.User?.LastName</p>
+                                <p class="mb-1"><strong>Email:</strong> @Model.Order?.User?.Email</p>
+                                <p><strong>Telefon:</strong> @Model.Order?.User?.PhoneNumber</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border p-3 rounded mb-4">
+                                <h5 class="mb-3">Adres dostawy</h5>
+                                @if (Model.Order?.ShippingAddress != null)
+                                {
+                                    <p class="mb-1">@Model.Order.ShippingAddress.AddressLine1</p>
+
+                                    @if (!string.IsNullOrEmpty(Model.Order.ShippingAddress.AddressLine2))
+                                    {
+                                        <p class="mb-1">@Model.Order.ShippingAddress.AddressLine2</p>
+                                    }
+
+                                    <p class="mb-1">
+                                        @Model.Order.ShippingAddress.PostalCode @Model.Order.ShippingAddress.City
+                                    </p>
+                                    <p>@Model.Order.ShippingAddress.Country</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="border p-3 rounded mb-4">
+                                <h5 class="mb-3">Metoda dostawy</h5>
+                                <p class="mb-1"><strong>@Model.Order?.ShippingMethod?.Name</strong></p>
+                                <p>@Model.Order?.ShippingMethod?.Description</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border p-3 rounded mb-4">
+                                <h5 class="mb-3">Metoda płatności</h5>
+                                <p class="mb-1"><strong>@Model.Order?.PaymentMethod?.Name</strong></p>
+                                <p>@Model.Order?.PaymentMethod?.Description</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <p class="mb-0">Na Twój adres email została wysłana wiadomość z potwierdzeniem zamówienia.</p>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="/" class="btn btn-dark">Wróć do sklepu</a>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>

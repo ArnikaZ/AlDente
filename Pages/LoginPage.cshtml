@@ -9,6 +9,12 @@
     <!-- NAV z zakładkami -->
     <div class="row">
         <div class="col-md-6 offset-md-3 mt-5">
+            @if (Model.StatusMessage != null)
+            {
+                <div class="alert alert-secondary mb-4">
+                    @Model.StatusMessage
+                </div>
+            }
             <ul class="nav nav-tabs justify-content-center" id="loginTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active"
@@ -44,26 +50,24 @@
                      id="login-content"
                      role="tabpanel"
                      aria-labelledby="login-tab">
-                    <form>
+                    <form method="post" asp-page-handler="Login">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                         <div class="mb-3">
-                            <label for="loginUsernameOrEmail" class="form-label">
-                                Adres e-mail
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="loginUsernameOrEmail"
-                                   placeholder="Wprowadź e-mail">
+                            <label asp-for="LoginInput.Email" class="form-label">Adres e-mail</label>
+                            <input asp-for="LoginInput.Email" class="form-control" placeholder="Wprowadź e-mail">
+                            <span asp-validation-for="LoginInput.Email" class="text-danger"></span>
                         </div>
+
                         <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Hasło</label>
-                            <input type="password"
-                                   class="form-control"
-                                   id="loginPassword"
-                                   placeholder="Wprowadź hasło">
+                            <label asp-for="LoginInput.Password" class="form-label">Hasło</label>
+                            <input asp-for="LoginInput.Password" class="form-control" placeholder="Wprowadź hasło">
+                            <span asp-validation-for="LoginInput.Password" class="text-danger"></span>
                         </div>
+
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe">
-                            <label class="form-check-label" for="rememberMe">Zapamiętaj mnie</label>
+                            <input asp-for="LoginInput.RememberMe" class="form-check-input">
+                            <label asp-for="LoginInput.RememberMe" class="form-check-label">Zapamiętaj mnie</label>
                         </div>
                         <button type="submit" class="btn btn-dark">Zaloguj się</button>
                     </form>
@@ -74,45 +78,28 @@
                      id="register-content"
                      role="tabpanel"
                      aria-labelledby="register-tab">
-                    <form id="registerForm">
+                    <form method="post" asp-page-handler="Register">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                         <div class="mb-3">
-                            <label for="registerEmail" class="form-label">
-                                Adres e-mail
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="registerEmail"
-                                   placeholder="Wprowadź e-mail">
+                            <label asp-for="RegisterInput.Email" class="form-label">Adres e-mail</label>
+                            <input asp-for="RegisterInput.Email" class="form-control" placeholder="Wprowadź e-mail">
+                            <span asp-validation-for="RegisterInput.Email" class="text-danger"></span>
                         </div>
+
                         <div class="mb-3">
-                            <label for="registerPassword" class="form-label">
-                                Hasło
-                            </label>
-                            <input type="password"
-                                   class="form-control"
-                                   id="registerPassword"
-                                   placeholder="Wprowadź hasło">
+                            <label asp-for="RegisterInput.Password" class="form-label">Hasło</label>
+                            <input asp-for="RegisterInput.Password" class="form-control" placeholder="Wprowadź hasło">
+                            <span asp-validation-for="RegisterInput.Password" class="text-danger"></span>
                         </div>
+
                         <div class="mb-3">
-                            <label for="registerPassword2" class="form-label">
-                                Powtórz hasło
-                            </label>
-                            <input type="password"
-                                   class="form-control"
-                                   id="registerPassword2"
-                                   placeholder="Powtórz hasło">
+                            <label asp-for="RegisterInput.ConfirmPassword" class="form-label">Powtórz hasło</label>
+                            <input asp-for="RegisterInput.ConfirmPassword" class="form-control" placeholder="Powtórz hasło">
+                            <span asp-validation-for="RegisterInput.Password" class="text-danger"></span>
                         </div>
                         
                         <button type="submit" class="btn btn-dark">Stwórz konto</button>
-                        <script>
-                            function onClick(e) {
-                              e.preventDefault();
-                              grecaptcha.enterprise.ready(async () => {
-                                const token = await grecaptcha.enterprise.execute('6LeIv8MqAAAAACggo_Ey6hGPgO39ByeaQaNsIdiH', {action: 'LOGIN'});
-                              });
-                            }
-                        </script>
-                        
                     </form>
                 </div>
 
@@ -122,3 +109,16 @@
    
     </div>
 </div>
+
+@* <script>
+    function onClick(e) {
+      e.preventDefault();
+      grecaptcha.enterprise.ready(async () => {
+        const token = await grecaptcha.enterprise.execute('6LeIv8MqAAAAACggo_Ey6hGPgO39ByeaQaNsIdiH', {action: 'LOGIN'});
+      });
+    }
+</script>*@
+@*@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@
+
