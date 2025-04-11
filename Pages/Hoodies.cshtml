@@ -28,18 +28,18 @@
                                 .OrderBy(pi => pi.DisplayOrder);
 
                                 <div class="carousel-item active">
-                                    
+                                    <a href="/ProductDetails/@hoodie.Id">
                                         <img class="img-fluid" src="@(mainImage?.ImageUrl ?? hoodie.ImageUrl)" alt="@hoodie.Name">
-                                    
+                                    </a>
                                     
                                 </div>
 
                                 @foreach (var image in additionalImages)
                                 {
                                     <div class="carousel-item">
-                                       
+                                        <a href="/ProductDetails/@hoodie.Id">
                                             <img class="img-fluid" src="@image.ImageUrl" alt="@hoodie.Name">
-                                        
+                                        </a>
                                         
                                     </div>
                                 }
@@ -47,17 +47,17 @@
                             else if (!string.IsNullOrEmpty(hoodie.ImageUrl))
                             {
                                 <div class="carousel-item active">
-                              
+                                    <a href="/ProductDetails/@hoodie.Id">
                                         <img class="img-fluid" src="@hoodie.ImageUrl" alt="@hoodie.Name">
-                                    
+                                    </a>
                                 </div>
                             }
                             else
                             {
                                 <div class="carousel-item active">
-                               
+                                    <a href="/ProductDetails/@hoodie.Id">
                                         <img class="img-fluid" src="/images/placeholder.jpg" alt="Brak zdjęcia">
-                                    
+                                    </a>
                                 </div>
                             }
                         </div>
@@ -79,9 +79,9 @@
                 </div>
 
                 <div class="col-md-4 text-center align-content-center">
-                    
+                    <a href="/ProductDetails/@hoodie.Id" class="text-decoration-none text-dark">
                         <h6>@hoodie.Name</h6>
-                    
+                    </a>
                     <p>@hoodie.Price.ToString("N2") PLN</p>
 
                     <form method="post" asp-page="/AddToCart">

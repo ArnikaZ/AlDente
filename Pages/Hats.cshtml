@@ -23,16 +23,16 @@
                                 var mainImage = hat.ProductImages.FirstOrDefault(pi => pi.IsMain) ?? hat.ProductImages.OrderBy(pi => pi.DisplayOrder).FirstOrDefault();
                                 var additionalImages = hat.ProductImages.Where(pi => pi != mainImage).OrderBy(pi => pi.DisplayOrder);
                                 <div class="carousel-item active">
-                                    
+                                    <a href="/ProductDetails/@hat.Id">
                                         <img class="img-fluid" src="@(mainImage?.ImageUrl ?? hat.ImageUrl)" alt="@hat.Name" />
-                                    
+                                    </a>
                                 </div>
                                 @foreach(var image in additionalImages)
                                 {
                                     <div class="carousel-item">
-                                     
+                                        <a href="/ProductDetails/@hat.Id">
                                             <img class="img-fluid" src="@image.ImageUrl" alt="@hat.Name" />
-                                        
+                                        </a>
                                         
                                     </div>
                                 }
@@ -40,17 +40,17 @@
                             else if (!string.IsNullOrEmpty(hat.ImageUrl))
                             {
                                 <div class="carousel-item active">
-                                 
+                                    <a href="/ProductDetails/@hat.Id">
                                         <img class="img-fluid" src="@hat.ImageUrl" alt="@hat.Name" />
-                                    
+                                    </a>
                                 </div>
                             }
                             else
                             {
                                 <div class="carousel-item active">
-                                   
+                                    <a href="/ProductDetails/@hat.Id">
                                         <img class="img-fluid" src="/images/placeholder.jpg" alt="Brak zdjęcia" />
-                                    
+                                    </a>
                                 </div>
                             }
                             </div>
@@ -68,9 +68,9 @@
                         </div>
                 </div>
                 <div class="col-md-4 text-center align-content-center">
-                    
+                    <a href="/ProductDetails/@hat.Id" class="text-decoration-none text-dark">
                         <h6>@hat.Name</h6>
-                    
+                    </a>
                     <p>@hat.Price.ToString("N2") PLN</p>
 
                     <form method="post" asp-page="/AddToCart">

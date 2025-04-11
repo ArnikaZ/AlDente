@@ -24,17 +24,17 @@
                                 var mainImage = shirt.ProductImages.FirstOrDefault(pi => pi.IsMain) ?? shirt.ProductImages.OrderBy(pi => pi.DisplayOrder).FirstOrDefault();
                                 var additionalImages = shirt.ProductImages.Where(pi => pi != mainImage).OrderBy(pi => pi.DisplayOrder);
                                 <div class="carousel-item active">
-                                    
+                                    <a href="/ProductDetails/@shirt.Id">
                                         <img class="img-fluid" src="@(mainImage?.ImageUrl?? shirt.ImageUrl)" alt="@shirt.Name" />
-                                   
+                                    </a>
                                     
                                 </div>
                                 @foreach (var image in additionalImages)
                                 {
                                     <div class="carousel-item">
-                                        
+                                        <a href="/ProductDetails/@shirt.Id">
                                             <img class="img-fluid" src="@image.ImageUrl" alt="@shirt.Name" />
-                                        
+                                        </a>
                                         
                                     </div>
                                 }
@@ -42,18 +42,18 @@
                             else if (!string.IsNullOrEmpty(shirt.ImageUrl))
                             {
                                 <div class="carousel-item active">
-                                   
+                                    <a href="/ProductDetails/@shirt.Id">
                                         <img class="img-fluid" src="@shirt.ImageUrl" alt="@shirt.Name">
-                                    
+                                    </a>
                                     
                                 </div>
                             }
                             else
                             {
                                 <div class="carousel-item active">
-                                    
+                                    <a href="/ProductDetails/@shirt.Id">
                                         <img class="img-fluid" src="/images/placeholder.jpg" alt="Brak zdjęcia">
-                                    
+                                    </a>
                                     
                                 </div>
                             }
@@ -73,9 +73,9 @@
                     </div>
                 </div>
                 <div class="col-sm-4 text-center align-content-center">
-                    
+                    <a href="/ProductDetails/@shirt.Id" class="text-decoration-none text-dark">
                         <h6>@shirt.Name</h6>
-                        
+                        </a>
                     
                     <p>@shirt.Price.ToString("N2") PLN</p>
 

@@ -42,15 +42,6 @@ body {
     border-radius: 50%;
     
 }
-.hat {
-    height: 500px;
-}
-
-    .hat img {
-        width: 100%; /* Zajmuj ca³¹ szerokoœæ slajdu */
-        height: 100%; /* Zajmuj ca³¹ wysokoœæ slajdu */
-        object-fit: cover;
-    }
 
 .instagram{
     color: black;
@@ -106,3 +97,37 @@ body {
         height: 100%;
         object-fit: contain; /* lub cover, w zale¿noœci od preferencji */
     }
+/* Style dla nak³adki na zdjêcia produktów */
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Pó³przeŸroczyste czarne t³o */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.overlay-content {
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.image-container:hover .overlay {
+    opacity: 1;
+}
+
+.image-container:hover img {
+    filter: blur(1px);
+    transition: filter 0.3s ease;
+}
