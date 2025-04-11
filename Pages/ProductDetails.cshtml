@@ -20,25 +20,25 @@
                         {
                             var mainImage = Model.Product.ProductImages.FirstOrDefault(pi => pi.IsMain) ?? Model.Product.ProductImages.OrderBy(pi => pi.DisplayOrder).FirstOrDefault();
                             var additionalImages = Model.Product.ProductImages.Where(pi => pi != mainImage).OrderBy(pi => pi.DisplayOrder);
-                            <div class="carousel-item active">
+                            <div class="carousel-item productDetailImg active">
                                 <img class="img-fluid" src="@(mainImage?.ImageUrl)" alt="@Model.Product.Name" />
                             </div>
                             @foreach (var image in additionalImages)
                             {
-                                <div class="carousel-item">
+                                <div class="carousel-item productDetailImg">
                                     <img class="img-fluid" src="@image.ImageUrl" alt="@Model.Product.Name" />
                                 </div>
                             }
                         }
                         else if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
                         {
-                            <div class="carousel-item active">
+                            <div class="carousel-item active productDetailImg">
                                 <img class="img-fluid" src="@Model.Product.ImageUrl" alt="@Model.Product.Name" />
                             </div>
                         }
                         else
                         {
-                            <div class="carousel-item active">
+                            <div class="carousel-item active productDetailImg">
                                 <img class="img-fluid" src="/images/placeholder.jpg" alt="Brak zdjęcia" />
                             </div>
                         }
@@ -47,11 +47,11 @@
                     @if (Model.Product.ImageUrl != null && Model.Product.ImageUrl.Count() > 1)
                     {
                         <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="carousel-control-prev-icon productDetailIcon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
                         <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="carousel-control-next-icon productDetailIcon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
                     }

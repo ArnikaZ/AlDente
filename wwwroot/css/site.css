@@ -29,26 +29,12 @@ body {
     letter-spacing: 5px;
     font-weight: 300 !important; 
 }
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    /* Zwiêkszenie szerokoœci i wysokoœci */
-    width: 3rem;
-    height: 3rem;
-    /* Ikona w tle zajmuje tylko czêœæ kontenera */
-    background-size: 50%, 50%;
-    /* Nadanie pó³przezroczystego czarnego t³a */
-    background-color: rgba(0, 0, 0, 0.3);
-    /* Zaokr¹glenie, aby uzyskaæ kszta³t kó³ka */
-    border-radius: 50%;
-    
-}
 
-.instagram{
+
+.instagram {
     color: black;
     font-size: 20px;
     letter-spacing: 3px;
-    
-    
 }
 
 /* Usuwamy standardow¹ liniê pod nav-tabs */
@@ -82,21 +68,89 @@ body {
     text-align: justify;
 }
 
+.carousel {
+    position: relative;
+    width: 100%;
+}
+
+/* Modyfikacja po³o¿enia i rozmiaru kontrolek karuzeli */
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    padding: 0;
+    z-index: 10;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+/* Umieszczenie kontrolek wewn¹trz obrazu */
+.carousel-control-prev {
+    left: 10px; /* Odleg³oœæ od lewej krawêdzi */
+}
+
+.carousel-control-next {
+    right: 10px; /* Odleg³oœæ od prawej krawêdzi */
+}
+
+/* Style dla ikon strza³ek */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    background-size: 50% 50%;
+}
+
+/* Animacja naje¿d¿ania na kontrolki */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
+}
+
+/* Modyfikacja stylu dla obrazów w karuzeli */
 .carousel-item {
     position: relative;
-    height: 0;
-    padding-bottom: 133%; /* Ustaw odpowiedni stosunek wysokoœci do szerokoœci */
+    text-align: center;
+    height: auto;
+    padding-bottom: 0; /* Usuwamy procentowy padding, który móg³ powodowaæ problemy */
     overflow: hidden;
 }
 
     .carousel-item img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* lub cover, w zale¿noœci od preferencji */
+        position: relative; /* Zmieniamy z absolute na relative */
+        max-width: 100%;
+        max-height: 80vh; /* Maksymalna wysokoœæ obrazu */
+        width: auto;
+        height: auto;
+        margin: 0 auto;
+        object-fit: contain;
     }
+
+/* Styl dla karuzeli na stronie szczegó³ów produktu */
+#productCarousel {
+     /* Jasne t³o */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Responsywnoœæ dla mniejszych ekranów */
+@media (max-width: 768px) {
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .carousel-item img {
+        max-height: 50vh;
+    }
+}
+
 /* Style dla nak³adki na zdjêcia produktów */
 .image-container {
     position: relative;
