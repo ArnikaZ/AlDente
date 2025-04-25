@@ -1,6 +1,8 @@
 using AlDentev2.Data;
 using AlDentev2.Models;
 using AlDentev2.Repositories;
+using AlDentev2.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,17 +31,22 @@ namespace AlDentev2
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
                 options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedAccount = true;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-            // Configure authentication
             builder.Services.AddAuthentication()
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/LoginPage";
-                    options.AccessDeniedPath = "/Error";
-                });
+            .AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            })
+            .AddFacebook(options =>
+            {
+                options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+                options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+            });
 
             //rejestracja repozytoriów
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -47,6 +54,7 @@ namespace AlDentev2
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IShippingMethodRepository, ShippingMethodRepository>();
+            builder.Services.AddScoped<IEmailSender, GmailEmailSender>();
 
             //konfiguracja obs³ugi sesji dla utrzymania stanu koszyka niezalogowanych u¿ytkowników
             builder.Services.AddDistributedMemoryCache(); //do przechwywania danych w sesji

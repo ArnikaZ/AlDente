@@ -10,7 +10,8 @@ namespace AlDentev2.Models
 
         [Required(ErrorMessage = "Hasło jest wymagane")]
         [DataType(DataType.Password)]
-        [StringLength(50, ErrorMessage = "Hasło musi zawierać co najmniej {2} znaków", MinimumLength = 8)]
+        [StringLength(100, ErrorMessage = "Hasło musi zawierać co najmniej {2} znaków", MinimumLength = 8)]
+        [RegularExpression(@"^(?=.*\d)(?=.*[A-Z]).{8,}$", ErrorMessage = "Hasło musi zawierać co najmniej jedną cyfrę i jedną wielką literę")]
         public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Potwierdzenie hasła jest wymagane")]
