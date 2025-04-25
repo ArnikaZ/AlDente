@@ -15,8 +15,7 @@
 <body>
     <header>
         <nav class="navbar navbar-light bg-white border fixed-top">
-            <div class="container-fluid ">
-                
+            <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -44,15 +43,16 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-page="/Bags">Torby</a>
-                            </li><hr />
+                            </li>
+                            <hr />
                             <li class="nav-item">
                                 <a class="nav-link" asp-page="/About">O marce</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-page="/ContactForm">Kontakt</a>
                             </li>
-                
-                        </ul><hr />
+                        </ul>
+                        <hr />
                         <form class="d-flex mt-3" role="search">
                             <input class="form-control me-2" type="search" placeholder="Szukaj" aria-label="Search">
                             <button class="btn btn-outline-dark" type="submit">Szukaj</button>
@@ -64,11 +64,24 @@
                     <a class="text-decoration-none text-black me-4" asp-page="/ShoppingCart">
                         <i class="bi bi-bag fs-5"></i>
                     </a>
-                    <a class="text-decoration-none text-black me-3" asp-page="/LoginPage">
-                        <i class="bi bi-person fs-4"></i>
-                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="text-decoration-none text-black me-3" asp-page="/Account" title="Moje konto">
+                            <i class="bi bi-person fs-4"></i>
+                        </a>
+                        <form method="post" asp-page="/Logout">
+                            <button type="submit" class="btn btn-link text-decoration-none text-black p-0" title="Wyloguj">
+                                <i class="bi bi-box-arrow-right fs-4"></i>
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="text-decoration-none text-black me-3" asp-page="/LoginPage">
+                            <i class="bi bi-person fs-4"></i>
+                        </a>
+                    }
                 </div>
-
             </div>
         </nav>
     </header>
@@ -78,14 +91,13 @@
         </main>
     </div>
 
-    <footer class="border-top footer  mt-3">
+    <footer class="border-top footer mt-3">
         <div class="container">
             <div class="row mt-2">
                 <div class="col-md-4">
                     <h6 class="mb-3">Informacje</h6>
                     <a class="text-decoration-none text-muted" href=""><p>Koszt i czas wysyłki</p></a>
                     <a class="text-decoration-none text-muted" href=""><p>Zwroty i reklamacje</p></a>
-
                 </div>
                 <div class="col-md-4">
                     <h6 class="mb-3">Regulaminy</h6>
@@ -97,7 +109,7 @@
                     <h6 class="mb-3">Kontakt</h6>
                     <p class="text-muted"><i class="bi bi-envelope"></i> aldente@gmail.com</p>
                     <p><a class="text-decoration-none text-muted mb-3" href=""><i class="bi bi-instagram"></i> linguadelglutine</a></p>
-                    <p><a class="text-decoration-none text-muted " asp-page="/ContactForm"><i class="bi bi-envelope-paper"></i> formularz kontaktowy</a></p>
+                    <p><a class="text-decoration-none text-muted" asp-page="/ContactForm"><i class="bi bi-envelope-paper"></i> formularz kontaktowy</a></p>
                 </div>
             </div>
             &copy; 2025 - Al Dente
@@ -108,7 +120,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeIv8MqAAAAACggo_Ey6hGPgO39ByeaQaNsIdiH"></script>
-    
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

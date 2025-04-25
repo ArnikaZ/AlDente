@@ -1,4 +1,6 @@
 ﻿using AlDentev2.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlDentev2.Data
@@ -6,7 +8,7 @@ namespace AlDentev2.Data
     /// <summary>
     /// Łączy modele z bazą danych
     /// </summary>
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext: IdentityDbContext<User, IdentityRole<int>, int>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         //DbSet to kolekcja reprezentująca tabelę w bazie danych
@@ -26,6 +28,14 @@ namespace AlDentev2.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<IdentityRole<int>>().ToTable("Roles");
+            modelBuilder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
+            modelBuilder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");
+            modelBuilder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
+            modelBuilder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
+            modelBuilder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
 
             //konfiguracja relacji i indeksów
             modelBuilder.Entity<Product>()

@@ -1,31 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace AlDentev2.Models
 {
-    public class User
+    public class User: IdentityUser<int>
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [StringLength(50)]
-        public string Email { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(100)]
-        public string PasswordHash { get; set; } = string.Empty;
+      
 
         [StringLength(50)]
         public string? FirstName { get; set; }
 
         [StringLength(50)]
         public string? LastName { get; set; }
-
-        [StringLength(20)]
-        [Phone]
-        public string? PhoneNumber { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

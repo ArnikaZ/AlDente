@@ -1,5 +1,6 @@
 ﻿using AlDentev2.Data;
 using AlDentev2.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlDentev2.Repositories
@@ -7,13 +8,17 @@ namespace AlDentev2.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
-        public UserRepository(ApplicationDbContext context)
+        private readonly UserManager<User> _userManager;
+
+        public UserRepository(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
         public async Task<Address> CreateAddressAsync(Address address)
         {
-            if(!await _context.Addresses.AnyAsync(a => a.UserId == address.UserId))
+            if (!await _context.Addresses.AnyAsync(a => a.UserId == address.UserId))
             {
                 address.IsDefault = true;
             }
@@ -28,9 +33,12 @@ namespace AlDentev2.Repositories
 
         public async Task<User> CreateUserAsync(User user)
         {
-            user.CreatedAt = DateTime.UtcNow;
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            // Use UserManager for user creation
+            var result = await _userManager.CreateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
             return user;
         }
 
@@ -41,11 +49,11 @@ namespace AlDentev2.Repositories
             {
                 if (address.IsDefault)
                 {
-                    var user = await _context.Users.FindAsync(address.UserId);
+                    var user = await _userManager.FindByIdAsync(address.UserId.ToString());
                     if (user != null)
                     {
                         user.DefaultAddress = null;
-                        _context.Users.Update(user);
+                        await _userManager.UpdateAsync(user);
                     }
                 }
                 _context.Addresses.Remove(address);
@@ -68,16 +76,12 @@ namespace AlDentev2.Repositories
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.Users
-                .Include(u => u.DefaultAddress)
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            return await _userManager.FindByEmailAsync(email);
         }
 
         public async Task<User?> GetUserByIdAsync(int userId)
         {
-            return await _context.Users
-                .Include(u => u.DefaultAddress)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+            return await _userManager.FindByIdAsync(userId.ToString());
         }
 
         public async Task SetDefaultAddressAsync(int userId, int addressId)
@@ -85,18 +89,17 @@ namespace AlDentev2.Repositories
             var userAddresses = await _context.Addresses
                 .Where(a => a.UserId == userId)
                 .ToListAsync();
-            foreach(var address in userAddresses)
+            foreach (var address in userAddresses)
             {
                 address.IsDefault = (address.Id == addressId);
                 _context.Addresses.Update(address);
             }
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user != null)
             {
                 user.DefaultAddressId = addressId;
-                _context.Users.Update(user);
+                await _userManager.UpdateAsync(user);
             }
-
             await _context.SaveChangesAsync();
         }
 
@@ -112,8 +115,7 @@ namespace AlDentev2.Repositories
 
         public async Task UpdateUserAsync(User user)
         {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            await _userManager.UpdateAsync(user);
         }
     }
 }

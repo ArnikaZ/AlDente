@@ -96,29 +96,17 @@
                         <div class="mb-3">
                             <label asp-for="RegisterInput.ConfirmPassword" class="form-label">Powtórz hasło</label>
                             <input asp-for="RegisterInput.ConfirmPassword" class="form-control" placeholder="Powtórz hasło">
-                            <span asp-validation-for="RegisterInput.Password" class="text-danger"></span>
+                            <span asp-validation-for="RegisterInput.ConfirmPassword" class="text-danger"></span>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-dark">Stwórz konto</button>
                     </form>
                 </div>
-
             </div>
-
         </div>
-   
     </div>
 </div>
 
-@* <script>
-    function onClick(e) {
-      e.preventDefault();
-      grecaptcha.enterprise.ready(async () => {
-        const token = await grecaptcha.enterprise.execute('6LeIv8MqAAAAACggo_Ey6hGPgO39ByeaQaNsIdiH', {action: 'LOGIN'});
-      });
-    }
-</script>*@
-@*@section Scripts {
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
-} *@
-
+}

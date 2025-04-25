@@ -1,5 +1,7 @@
 using AlDentev2.Data;
+using AlDentev2.Models;
 using AlDentev2.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlDentev2
@@ -17,6 +19,27 @@ namespace AlDentev2
 
             //dodanie kontekstu bazy danych
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Add Identity services
+            builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = false;
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+            // Configure authentication
+            builder.Services.AddAuthentication()
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/LoginPage";
+                    options.AccessDeniedPath = "/Error";
+                });
 
             //rejestracja repozytoriów
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -66,7 +89,7 @@ namespace AlDentev2
 
             app.UseRouting();
             app.UseSession();
-
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.MapRazorPages();
