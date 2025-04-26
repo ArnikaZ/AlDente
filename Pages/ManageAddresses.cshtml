@@ -1,0 +1,191 @@
+﻿@page
+@model AlDentev2.Pages.ManageAddressesModel
+@{
+    ViewData["Title"] = "Zarządzaj adresami";
+}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 mt-5">
+            <h4 class="mb-4">Zarządzaj adresami</h4>
+
+            @if (Model.StatusMessage != null)
+            {
+                <div class="alert @(Model.StatusMessage.Contains("pomyślnie") ? "alert-success" : "alert-danger") mb-4">
+                    @Model.StatusMessage
+                </div>
+            }
+
+            <!-- Lista adresów -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Twoje adresy</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Addresses.Any())
+                    {
+                        <p>Brak zapisanych adresów.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Adres</th>
+                                        <th>Miasto</th>
+                                        <th>Kod pocztowy</th>
+                                        <th>Kraj</th>
+                                        <th>Domyślny</th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var address in Model.Addresses)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @address.AddressLine1
+                                                @if (!string.IsNullOrEmpty(address.AddressLine2))
+                                                {
+                                                    <br />
+
+                                                    @address.AddressLine2
+                                                }
+                                            </td>
+                                            <td>@address.City</td>
+                                            <td>@address.PostalCode</td>
+                                            <td>@address.Country</td>
+                                            <td>
+                                                @if (address.IsDefault)
+                                                {
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                }
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-dark me-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#addressModal"
+                                                        onclick="loadAddress(@address.Id, '@address.AddressLine1', '@address.AddressLine2', '@address.City', '@address.PostalCode', '@address.Country', @address.IsDefault)">
+                                                    Edytuj
+                                                </button>
+                                                @if (!address.IsDefault)
+                                                {
+                                                    <form method="post" asp-page-handler="SetDefault" class="d-inline">
+                                                        <input type="hidden" name="addressId" value="@address.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-primary me-2">Ustaw domyślny</button>
+                                                    </form>
+                                                    <form method="post" asp-page-handler="Delete" class="d-inline">
+                                                        <input type="hidden" name="addressId" value="@address.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                                onclick="return confirm('Czy na pewno chcesz usunąć ten adres?')">
+                                                            Usuń
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    <button class="btn btn-dark mt-3"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addressModal"
+                            onclick="clearForm()">
+                        Dodaj nowy adres
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal do dodawania/edytowania adresu -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressModalLabel">Adres</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="SaveAddress">
+                    <input type="hidden" asp-for="Input.Id" value="@Model.Input.Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.AddressLine1" class="form-label">Adres</label>
+                        <input asp-for="Input.AddressLine1" class="form-control" placeholder="Wprowadź adres" data-val="true" />
+                        <span asp-validation-for="Input.AddressLine1" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.AddressLine2" class="form-label">Adres (kontynuacja, opcjonalne)</label>
+                        <input asp-for="Input.AddressLine2" class="form-control" placeholder="Wprowadź dodatkowy adres" data-val="true" />
+                        <span asp-validation-for="Input.AddressLine2" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.City" class="form-label">Miasto</label>
+                        <input asp-for="Input.City" class="form-control" placeholder="Wprowadź miasto" data-val="true" />
+                        <span asp-validation-for="Input.City" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.PostalCode" class="form-label">Kod pocztowy</label>
+                        <input asp-for="Input.PostalCode" class="form-control" placeholder="Wprowadź kod pocztowy (00-000)" data-val="true" />
+                        <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Country" class="form-label">Kraj</label>
+                        <input asp-for="Input.Country" class="form-control" placeholder="Wprowadź kraj" data-val="true" />
+                        <span asp-validation-for="Input.Country" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="Input.IsDefault" class="form-check-input" />
+                        <label asp-for="Input.IsDefault" class="form-check-label">Ustaw jako domyślny</label>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-dark">Zapisz</button>
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Anuluj</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function clearForm() {
+            console.log('Clearing form');
+            document.getElementById('Input_Id').value = '0';
+            document.getElementById('Input_AddressLine1').value = '';
+            document.getElementById('Input_AddressLine2').value = '';
+            document.getElementById('Input_City').value = '';
+            document.getElementById('Input_PostalCode').value = '';
+            document.getElementById('Input_Country').value = '';
+            document.getElementById('Input_IsDefault').checked = false;
+            document.querySelector('.modal-title').textContent = 'Dodaj adres';
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+        }
+
+        function loadAddress(id, addressLine1, addressLine2, city, postalCode, country, isDefault) {
+            console.log('Loading address: ', id);
+            document.getElementById('Input_Id').value = id || '0';
+            document.getElementById('Input_AddressLine1').value = addressLine1 || '';
+            document.getElementById('Input_AddressLine2').value = addressLine2 || '';
+            document.getElementById('Input_City').value = city || '';
+            document.getElementById('Input_PostalCode').value = postalCode || '';
+            document.getElementById('Input_Country').value = country || '';
+            document.getElementById('Input_IsDefault').checked = isDefault || false;
+            document.querySelector('.modal-title').textContent = 'Edytuj adres';
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+        }
+    </script>
+}

@@ -1,0 +1,100 @@
+﻿@page
+@model AlDentev2.Pages.CustomerProfileModel
+@{
+    ViewData["Title"] = "Profil klienta";
+}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 mt-5">
+            <h4 class="mb-4">Profil klienta</h4>
+
+            @if (Model.StatusMessage != null)
+            {
+                <div class="alert @(Model.StatusMessage.Contains("pomyślnie") ? "alert-success" : "alert-danger") mb-4">
+                    @Model.StatusMessage
+                </div>
+            }
+
+            <!-- Informacje osobiste -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informacje osobiste</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Imię:</strong> @Model.User?.FirstName</p>
+                    <p><strong>Nazwisko:</strong> @Model.User?.LastName</p>
+                    <p><strong>Email:</strong> @Model.User?.Email</p>
+                    <p><strong>Telefon:</strong> @Model.User?.PhoneNumber</p>
+                    <a href="/EditProfile" class="btn btn-outline-dark">Edytuj dane</a>
+                </div>
+            </div>
+
+            <!-- Adres dostawy -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Adres dostawy</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.DefaultAddress != null)
+                    {
+                        <p>@Model.DefaultAddress.AddressLine1</p>
+                        @if (!string.IsNullOrEmpty(Model.DefaultAddress.AddressLine2))
+                        {
+                            <p>@Model.DefaultAddress.AddressLine2</p>
+                        }
+                        <p>@Model.DefaultAddress.PostalCode @Model.DefaultAddress.City</p>
+                        <p>@Model.DefaultAddress.Country</p>
+                    }
+                    else
+                    {
+                        <p>Brak ustawionego adresu domyślnego.</p>
+                    }
+                    <a href="/ManageAddresses" class="btn btn-outline-dark">Zarządzaj adresami</a>
+                </div>
+            </div>
+
+            <!-- Historia zamówień -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Historia zamówień</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Orders.Any())
+                    {
+                        <p>Brak zamówień w historii.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Numer zamówienia</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Suma</th>
+                                        <th>Szczegóły</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.Orders)
+                                    {
+                                        <tr>
+                                            <td>#@order.Id</td>
+                                            <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>@order.Status</td>
+                                            <td>@order.TotalAmount.ToString("N2") zł</td>
+                                            <td>
+                                                <a href="/OrderConfirmation/@order.Id" class="btn btn-sm btn-outline-dark">Szczegóły</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
 </head>
 <body>
     <header>
@@ -66,7 +67,7 @@
                     </a>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a class="text-decoration-none text-black me-3" asp-page="/Account" title="Moje konto">
+                        <a class="text-decoration-none text-black me-3" asp-page="/CustomerProfile" title="Moje konto">
                             <i class="bi bi-person fs-4"></i>
                         </a>
                         <form method="post" asp-page="/Logout">
