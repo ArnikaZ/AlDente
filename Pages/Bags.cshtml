@@ -76,6 +76,7 @@
                     <p>@bag.Price.ToString("N2") PLN</p>
                     <form method="post" asp-page="/AddToCart">
                     <input type="hidden" name="ProductId" value="@bag.Id"/>
+                        <input type="hidden" name="SizeId" value="7" />
                     <div class="mb-3">
                         <label for="quantity-@bag.Id" class="visually-hidden">Ilość</label>
                         <input type="number"
@@ -87,7 +88,7 @@
                             max="10"
                             style="width: 70px;" />
                     </div>
-                    <button class="btn btn-dark mt-2" type="submit" id="addToCartBtn-@bag.Id" disabled>
+                    <button class="btn btn-dark mt-2" type="submit" id="addToCartBtn-@bag.Id" >
                         Dodaj do koszyka
                     </button>
                     
@@ -99,33 +100,3 @@
         
     </div>
 </div>
-
-@section Scripts{
-    <script>
-        function selectSize(button, sizeId){
-         const form = button.closest('form');
-            const sizeButtons = form.querySelectorAll('button[data-size-id]');
-            const hiddenInput = form.querySelector('input[name="SizeId"]');
-            const addToCartBtn = form.querySelector('button[type="submit"]');
-
-            // Usuń klasę 'active' ze wszystkich przycisków
-            sizeButtons.forEach(btn => {
-                btn.classList.remove('btn-dark');
-                btn.classList.add('btn-outline-dark');
-            });
-
-            // Dodaj klasę 'active' do wybranego przycisku
-            const isAvailable = button.getAttribute('data-available') === 'true';
-            if (isAvailable) {
-                button.classList.remove('btn-outline-dark');
-                button.classList.add('btn-dark');
-
-                // Ustaw wartość ukrytego pola
-                hiddenInput.value = sizeId;
-
-                // Odblokuj przycisk "Dodaj do koszyka"
-                addToCartBtn.disabled = false;
-            }
-        }
-    </script>
-}

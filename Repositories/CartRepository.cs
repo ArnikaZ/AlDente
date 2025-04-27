@@ -8,18 +8,41 @@ namespace AlDentev2.Repositories
     public class CartRepository : ICartRepository
     {
         private readonly ApplicationDbContext _context;
-        public CartRepository(ApplicationDbContext context)
+        private ILogger<CartRepository> _logger;
+        public CartRepository(ApplicationDbContext context, ILogger<CartRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task AddItemToCartAsync(CartItem cartItem)
         {
-            var existingItem = await GetCartItemAsync(cartItem.ProductId, cartItem.SizeId, cartItem.SessionId, cartItem.UserId); //spr czy produkt już istnieje w koszyku
+            _logger.LogInformation("AddItemToCart: ProductId={ProductId}, SizeId={SizeId}, Quantity={Quantity}, SessionId={SessionId}, UserId={UserId}",
+                cartItem.ProductId, cartItem.SizeId, cartItem.Quantity, cartItem.SessionId, cartItem.UserId);
+
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == cartItem.ProductId);
+
+            if (product == null)
+            {
+                _logger.LogError("Produkt nie istnieje: ProductId={ProductId}", cartItem.ProductId);
+                throw new ArgumentException("Produkt nie istnieje.");
+            }
+
+            if (product.Category.Name != "Torby" && cartItem.SizeId == 0)
+            {
+                _logger.LogError("Rozmiar wymagany dla produktu: ProductId={ProductId}", cartItem.ProductId);
+                throw new ArgumentException("Rozmiar jest wymagany dla tego produktu.");
+            }
+
+            var existingItem = await GetCartItemAsync(cartItem.ProductId, cartItem.SizeId, cartItem.SessionId, cartItem.UserId);
             if (existingItem != null)
             {
                 existingItem.Quantity += cartItem.Quantity;
                 existingItem.UpdatedAt = DateTime.UtcNow;
-                await UpdateCartItemAsync(existingItem);
+                _context.CartItems.Update(existingItem);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Zaktualizowano istniejący element koszyka: CartItemId={CartItemId}", existingItem.Id);
             }
             else
             {
@@ -27,6 +50,7 @@ namespace AlDentev2.Repositories
                 cartItem.UpdatedAt = DateTime.UtcNow;
                 await _context.CartItems.AddAsync(cartItem);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Dodano nowy element koszyka: CartItemId={CartItemId}", cartItem.Id);
             }
         }
 
@@ -62,28 +86,61 @@ namespace AlDentev2.Repositories
         //sprawdza, czy produkt w konkretnym rozmiarze jest już w koszyku
         public async Task<CartItem?> GetCartItemAsync(int productId, int sizeId, string? sessionId, int? userId)
         {
+            _logger.LogInformation("GetCartItemAsync: ProductId={ProductId}, SizeId={SizeId}, SessionId={SessionId}, UserId={UserId}", productId, sizeId, sessionId, userId);
+
             IQueryable<CartItem> query = _context.CartItems;
+
             if (userId.HasValue)
             {
-                query = query.Where(ci => ci.UserId == userId);
+                query = query.Where(ci => ci.UserId == userId && ci.ProductId == productId && ci.SizeId == sizeId);
             }
             else if (!string.IsNullOrEmpty(sessionId))
             {
-                query = query.Where(ci => ci.SessionId == sessionId);
+                query = query.Where(ci => ci.SessionId == sessionId && ci.ProductId == productId && ci.SizeId == sizeId);
             }
             else
             {
+                _logger.LogWarning("Brak SessionId i UserId w GetCartItemAsync");
                 return null;
             }
-            return await query.FirstOrDefaultAsync(ci => ci.ProductId == productId && ci.SizeId == sizeId);
+
+            var result = await query.FirstOrDefaultAsync();
+            _logger.LogInformation("GetCartItemAsync: Found={Found}", result != null);
+            return result;
         }
 
         //zwraca wszystkie elementy koszyka dla określonego użytkownika do wyświetlenia zawartości koszyka na stronie/ obliczania sumy zamówienia/ Procesu składania zamówienia, gdy potrzebujemy przenieść wszystkie elementy z koszyka do zamówienia
         public async Task<IEnumerable<CartItem>> GetCartItemsAsync(string? sessionId, int? userId)
         {
+            _logger.LogInformation("GetCartItemsAsync: SessionId={SessionId}, UserId={UserId}", sessionId, userId);
+
             IQueryable<CartItem> query = _context.CartItems
                 .Include(ci => ci.Product)
-                .Include(ci => ci.Size);
+                .Include(ci => ci.Size); // To ładuje Size, ale używa INNER JOIN
+
+            // Zastąp Include dla Size na ręczne zapytanie z LEFT JOIN
+            query = _context.CartItems
+                .Include(ci => ci.Product)
+                .GroupJoin(_context.Sizes,
+                    ci => ci.SizeId,
+                    s => s.Id,
+                    (ci, sizes) => new { CartItem = ci, Sizes = sizes })
+                .SelectMany(
+                    x => x.Sizes.DefaultIfEmpty(),
+                    (x, s) => new CartItem
+                    {
+                        Id = x.CartItem.Id,
+                        ProductId = x.CartItem.ProductId,
+                        Product = x.CartItem.Product,
+                        SizeId = x.CartItem.SizeId,
+                        Size = s, // Może być null dla SizeId = 0
+                        Quantity = x.CartItem.Quantity,
+                        SessionId = x.CartItem.SessionId,
+                        UserId = x.CartItem.UserId,
+                        CreatedAt = x.CartItem.CreatedAt,
+                        UpdatedAt = x.CartItem.UpdatedAt
+                    });
+
             if (userId.HasValue)
             {
                 query = query.Where(ci => ci.UserId == userId);
@@ -94,9 +151,13 @@ namespace AlDentev2.Repositories
             }
             else
             {
+                _logger.LogWarning("Brak SessionId i UserId w GetCartItemsAsync");
                 return Enumerable.Empty<CartItem>();
             }
-            return await query.ToListAsync();
+
+            var result = await query.ToListAsync();
+            _logger.LogInformation("GetCartItemsAsync: Zwrócono {Count} elementów", result.Count);
+            return result;
         }
 
         public async Task RemoveCartItemAsync(int cartItemId)

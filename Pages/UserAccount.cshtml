@@ -1,0 +1,251 @@
+﻿@page
+@model AlDentev2.Pages.UserAccountModel
+@{
+    ViewData["Title"] = "Moje konto";
+}
+<div class="container mt-5">
+    <h4 class="mb-4">Moje konto</h4>
+
+    @if (Model.StatusMessage != null)
+    {
+        <div class="alert alert-success mb-4">
+            @Model.StatusMessage
+        </div>
+    }
+
+    <div class="row">
+        <!-- Sekcja edycji danych -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Edytuj dane</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.FirstName" class="form-label"></label>
+                            <input asp-for="Input.FirstName" class="form-control" placeholder="Wprowadź imię" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.LastName" class="form-label"></label>
+                            <input asp-for="Input.LastName" class="form-control" placeholder="Wprowadź nazwisko" />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                            <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Wprowadź numer telefonu" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label"></label>
+                            <input asp-for="Input.Email" class="form-control" placeholder="Wprowadź adres e-mail" autocomplete="email" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100">Zapisz zmiany</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sekcja historii zamówień -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Historia zamówień</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Orders.Any())
+                    {
+                        <p>Brak zamówień.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Numer</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Suma</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.Orders)
+                                    {
+                                        <tr>
+                                            <td>@order.Id</td>
+                                            <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>@order.Status</td>
+                                            <td>@order.TotalAmount.ToString("N2") zł</td>
+                                            <td>
+                                                <a href="/OrderConfirmation/@order.Id" class="btn btn-outline-dark btn-sm">Szczegóły</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sekcja zarządzania adresami -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Adresy wysyłki</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Formularz dodawania/edytowania adresu -->
+                    <h6 id="address-form-title">Dodaj nowy adres</h6>
+                    <form id="address-form" method="post" asp-page-handler="AddAddress">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <input type="hidden" asp-for="AddressInput.Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AddressInput.AddressLine1" class="form-label"></label>
+                                <input asp-for="AddressInput.AddressLine1" class="form-control" placeholder="Wprowadź adres" />
+                                <span asp-validation-for="AddressInput.AddressLine1" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AddressInput.AddressLine2" class="form-label"></label>
+                                <input asp-for="AddressInput.AddressLine2" class="form-control" placeholder="Wprowadź dodatkowe informacje" />
+                                <span asp-validation-for="AddressInput.AddressLine2" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="AddressInput.City" class="form-label"></label>
+                                <input asp-for="AddressInput.City" class="form-control" placeholder="Wprowadź miasto" />
+                                <span asp-validation-for="AddressInput.City" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="AddressInput.PostalCode" class="form-label"></label>
+                                <input asp-for="AddressInput.PostalCode" class="form-control" placeholder="Wprowadź kod pocztowy" />
+                                <span asp-validation-for="AddressInput.PostalCode" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="AddressInput.Country" class="form-label"></label>
+                                <input asp-for="AddressInput.Country" class="form-control" placeholder="Wprowadź kraj" />
+                                <span asp-validation-for="AddressInput.Country" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="AddressInput.IsDefault" class="form-check-input" />
+                            <label asp-for="AddressInput.IsDefault" class="form-check-label"></label>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark" id="address-submit-btn">Dodaj adres</button>
+                    </form>
+
+                    <!-- Lista adresów -->
+                    <hr class="my-4" />
+                    <h6>Twoje adresy</h6>
+                    @if (!Model.Addresses.Any())
+                    {
+                        <p>Brak zapisanych adresów.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Adres</th>
+                                        <th>Miasto</th>
+                                        <th>Kod pocztowy</th>
+                                        <th>Kraj</th>
+                                        <th>Domyślny</th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var address in Model.Addresses)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @address.AddressLine1
+                                                @if (!string.IsNullOrEmpty(address.AddressLine2))
+                                                {
+                                                    <br />@address.AddressLine2
+                                                }
+                                            </td>
+                                            <td>@address.City</td>
+                                            <td>@address.PostalCode</td>
+                                            <td>@address.Country</td>
+                                            <td>
+                                                @if (address.IsDefault)
+                                                {
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                }
+                                            </td>
+                                            <td>
+                                                <form method="post" asp-page-handler="SetDefaultAddress" class="d-inline">
+                                                    <input type="hidden" name="addressId" value="@address.Id" />
+                                                    <button type="submit" class="btn btn-outline-dark btn-sm @(address.IsDefault ? "disabled" : "")" title="Ustaw jako domyślny">
+                                                        <i class="bi bi-star"></i>
+                                                    </button>
+                                                </form>
+                                                <button class="btn btn-outline-dark btn-sm" onclick="editAddress(@address.Id, '@address.AddressLine1', '@address.AddressLine2', '@address.City', '@address.PostalCode', '@address.Country', @address.IsDefault.ToString().ToLower())" title="Edytuj">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <form method="post" asp-page-handler="DeleteAddress" class="d-inline">
+                                                    <input type="hidden" name="addressId" value="@address.Id" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Usuń" onclick="return confirm('Czy na pewno chcesz usunąć ten adres?');">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function editAddress(id, addressLine1, addressLine2, city, postalCode, country, isDefault) {
+            document.querySelector('input[name="AddressInput.Id"]').value = id;
+            document.querySelector('input[name="AddressInput.AddressLine1"]').value = addressLine1;
+            document.querySelector('input[name="AddressInput.AddressLine2"]').value = addressLine2 || '';
+            document.querySelector('input[name="AddressInput.City"]').value = city;
+            document.querySelector('input[name="AddressInput.PostalCode"]').value = postalCode;
+            document.querySelector('input[name="AddressInput.Country"]').value = country;
+            document.querySelector('input[name="AddressInput.IsDefault"]').checked = isDefault === 'true';
+            document.querySelector('#address-form').setAttribute('asp-page-handler', 'EditAddress');
+            document.querySelector('#address-submit-btn').textContent = 'Zapisz zmiany';
+            document.querySelector('#address-form-title').textContent = 'Edytuj adres';
+        }
+
+        // Reset formularza po dodaniu adresu
+        document.querySelector('#address-form').addEventListener('submit', function (event) {
+            if (this.getAttribute('asp-page-handler') === 'EditAddress') return;
+            setTimeout(() => {
+                this.reset();
+                document.querySelector('#address-form-title').textContent = 'Dodaj nowy adres';
+                document.querySelector('#address-submit-btn').textContent = 'Dodaj adres';
+            }, 100);
+        });
+    </script>
+    }

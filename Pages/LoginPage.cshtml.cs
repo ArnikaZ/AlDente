@@ -1,5 +1,6 @@
 using AlDentev2.Models;
 using AlDentev2.Repositories;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -309,6 +310,10 @@ namespace AlDentev2.Pages
         public IActionResult OnPostExternalLogin(string provider, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
+            HttpContext.Session.SetString("TestKey", "TestValue"); // Test zapisu sesji
+            var testValue = HttpContext.Session.GetString("TestKey");
+            _logger.LogInformation("Session test: {Value}", testValue);
+
             var redirectUrl = Url.Page("/LoginPage", pageHandler: "ExternalLoginCallback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
@@ -317,8 +322,12 @@ namespace AlDentev2.Pages
         public async Task<IActionResult> OnGetExternalLoginCallbackAsync(string returnUrl = null, string remoteError = null)
         {
             returnUrl ??= Url.Content("~/");
+            _logger.LogInformation("External login callback called. Full URL: {Url}, ReturnUrl: {ReturnUrl}, RemoteError: {RemoteError}, Session ID: {SessionId}, Query: {Query}",
+                Request.GetDisplayUrl(), returnUrl, remoteError, HttpContext.Session.Id, Request.QueryString);
+
             if (remoteError != null)
             {
+                _logger.LogError("External provider error: {Error}", remoteError);
                 StatusMessage = $"B³¹d zewnêtrznego dostawcy: {remoteError}";
                 ActiveTab = "login";
                 return Page();
@@ -327,11 +336,16 @@ namespace AlDentev2.Pages
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
+                _logger.LogError("Failed to retrieve external login info. Session ID: {SessionId}, Request Headers: {Headers}, Query Parameters: {Query}",
+                    HttpContext.Session.Id,
+                    string.Join("; ", Request.Headers.Select(h => $"{h.Key}: {h.Value}")),
+                    string.Join("; ", Request.Query.Select(q => $"{q.Key}: {q.Value}")));
                 StatusMessage = "B³¹d podczas ³adowania informacji o logowaniu zewnêtrznym.";
                 ActiveTab = "login";
                 return Page();
             }
 
+            _logger.LogInformation("External login info retrieved. Provider: {Provider}, ProviderKey: {ProviderKey}", info.LoginProvider, info.ProviderKey);
             // Try to sign in with existing external login
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
