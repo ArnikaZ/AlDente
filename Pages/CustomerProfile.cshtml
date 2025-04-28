@@ -26,6 +26,28 @@
                     <p><strong>Email:</strong> @Model.User?.Email</p>
                     <p><strong>Telefon:</strong> @Model.User?.PhoneNumber</p>
                     <a href="/EditProfile" class="btn btn-outline-dark">Edytuj dane</a>
+                    <!-- Formularz zmiany hasła -->
+                    <hr class="my-4" />
+                    <h6>Zmień hasło</h6>
+                    <form method="post" asp-page-handler="ChangePassword">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="mb-3">
+                            <label asp-for="ChangePasswordInput.CurrentPassword" class="form-label">Bieżące hasło</label>
+                            <input asp-for="ChangePasswordInput.CurrentPassword" class="form-control" type="password" />
+                            <span asp-validation-for="ChangePasswordInput.CurrentPassword" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ChangePasswordInput.NewPassword" class="form-label">Nowe hasło</label>
+                            <input asp-for="ChangePasswordInput.NewPassword" class="form-control" type="password" />
+                            <span asp-validation-for="ChangePasswordInput.NewPassword" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ChangePasswordInput.ConfirmPassword" class="form-label">Potwierdź nowe hasło</label>
+                            <input asp-for="ChangePasswordInput.ConfirmPassword" class="form-control" type="password" />
+                            <span asp-validation-for="ChangePasswordInput.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Zmień hasło</button>
+                    </form>
                 </div>
             </div>
 
@@ -54,7 +76,7 @@
             </div>
 
             <!-- Historia zamówień -->
-            <div class="card">
+            <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">Historia zamówień</h5>
                 </div>
@@ -95,6 +117,23 @@
                     }
                 </div>
             </div>
+
+            <!-- Usunięcie konta -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Usuń konto</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Usunięcie konta jest nieodwracalne i usunie wszystkie dane osobowe oraz adresy. Nie można usunąć konta, jeśli istnieją aktywne zamówienia.</p>
+                    <form method="post" asp-page-handler="DeleteAccount">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć swoje konto? Tej operacji nie można cofnąć.');">Usuń konto</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

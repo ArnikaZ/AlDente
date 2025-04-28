@@ -23,16 +23,24 @@ namespace AlDentev2
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.Configure<PasswordHasherOptions>(options =>
+            {
+                options.IterationCount = 100000;
+            });
+
             // Add Identity services
             builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedAccount = true;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 5;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();

@@ -98,7 +98,7 @@ namespace AlDentev2.Pages
                 return Page();
             }
 
-            var result = await _signInManager.PasswordSignInAsync(LoginInput.Email, LoginInput.Password, LoginInput.RememberMe, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(LoginInput.Email, LoginInput.Password, LoginInput.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
             {
                 if (user != null)

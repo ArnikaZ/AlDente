@@ -1,0 +1,116 @@
+﻿@page
+@model AlDentev2.Pages.SearchModel
+@{
+    ViewData["Title"] = "Wyniki wyszukiwania";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center mt-5">
+            <h4 class="search-title">
+                Wyniki wyszukiwania@(string.IsNullOrEmpty(Model.Query) ? "" : " dla: " + Model.Query)
+            </h4>
+        </div>
+    </div>
+    <div class="row">
+        @if (string.IsNullOrEmpty(Model.Query))
+        {
+            <div class="col-12 mt-5 text-center">
+                <p>Wpisz frazę wyszukiwania, aby zobaczyć wyniki.</p>
+                <a href="/" class="btn btn-outline-dark mt-3">Wróć do zakupów</a>
+            </div>
+        }
+        else if (!Model.SearchResults.Any())
+        {
+            <div class="col-12 mt-5 text-center">
+                <p>Brak produktów pasujących do frazy "@Model.Query"</p>
+                <a href="/" class="btn btn-outline-dark mt-3">Wróć do zakupów</a>
+            </div>
+        }
+        else
+        {
+            @foreach (var product in Model.SearchResults)
+            {
+                <div class="col-sm-4 offset-sm-2 mt-5">
+                    <div id="carousel-@product.Id" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @if (product.ProductImages != null && product.ProductImages.Any())
+                            {
+                                var mainImage = product.ProductImages.FirstOrDefault(pi => pi.IsMain) ?? product.ProductImages.OrderBy(pi => pi.DisplayOrder).FirstOrDefault();
+                                var additionalImages = product.ProductImages.Where(pi => pi != mainImage).OrderBy(pi => pi.DisplayOrder);
+                                <div class="carousel-item active">
+                                    <a href="/ProductDetails/@product.Id">
+                                        <img class="img-fluid" src="@(mainImage?.ImageUrl ?? product.ImageUrl)" alt="@product.Name" />
+                                    </a>
+                                </div>
+                                @foreach (var image in additionalImages)
+                                {
+                                    <div class="carousel-item">
+                                        <a href="/ProductDetails/@product.Id">
+                                            <img class="img-fluid" src="@image.ImageUrl" alt="@product.Name" />
+                                        </a>
+                                    </div>
+                                }
+                            }
+                            else if (!string.IsNullOrEmpty(product.ImageUrl))
+                            {
+                                <div class="carousel-item active">
+                                    <a href="/ProductDetails/@product.Id">
+                                        <img class="img-fluid" src="@product.ImageUrl" alt="@product.Name" />
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="carousel-item active">
+                                    <a href="/ProductDetails/@product.Id">
+                                        <img class="img-fluid" src="/images/placeholder.jpg" alt="Brak zdjęcia" />
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        @if ((product.ProductImages != null && product.ProductImages.Count > 1) || (product.ProductImages == null && !string.IsNullOrEmpty(product.ImageUrl)))
+                        {
+                            <button type="button" class="carousel-control-prev" data-bs-target="#carousel-@product.Id" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button type="button" class="carousel-control-next" data-bs-target="#carousel-@product.Id" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-4 text-center align-content-center">
+                    <a href="/ProductDetails/@product.Id" class="text-decoration-none text-dark">
+                        <h6>@product.Name</h6>
+                    </a>
+                    <p>@product.Price.ToString("N2") PLN</p>
+                    <form method="post" asp-page="/AddToCart">
+                        <input type="hidden" name="ProductId" value="@product.Id" />
+                        @if (product.ProductSizes != null && product.ProductSizes.Any())
+                        {
+                            <div class="mb-3">
+                                <select name="SizeId" class="form-select" required>
+                                    @foreach (var size in product.ProductSizes.Where(ps => ps.StockQuantity > 0).Select(ps => ps.Size))
+                                    {
+                                        <option value="@size.Id">@size.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="hidden" name="SizeId" value="7" />
+                        }
+                        <div class="mb-3">
+                            <label for="quantity-@product.Id" class="visually-hidden">Ilość</label>
+                            <input type="number" id="quantity-@product.Id" name="Quantity" class="form-control d-inline-block" value="1" min="1" max="10" style="width: 70px;" />
+                        </div>
+                        <button class="btn btn-dark mt-2" type="submit">Dodaj do koszyka</button>
+                    </form>
+                </div>
+            }
+        }
+    </div>
+</div>

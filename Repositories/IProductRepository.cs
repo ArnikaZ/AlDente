@@ -9,5 +9,6 @@ namespace AlDentev2.Repositories
         Task<Product?> GetProductByIdAsync(int id);
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
         Task<IEnumerable<Size>> GetAvailableSizesForProductAsync(int productId);
+        Task<IEnumerable<Product>> SearchProductsAsync(string query);
     }
 }

@@ -51,5 +51,18 @@ namespace AlDentev2.Repositories
                 .Select(p => p.Size)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Product>> SearchProductsAsync(string query)
+        {
+            query = query.ToLower().Trim();
+            return await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductSizes).ThenInclude(ps => ps.Size)
+                .Include(p => p.ProductImages)
+                .Where(p => p.Name.ToLower().Contains(query) ||
+                            p.Description.ToLower().Contains(query) ||
+                            p.SKU.ToLower().Contains(query) ||
+                            p.Category.Name.ToLower().Contains(query))
+                .ToListAsync();
+        }
     }
 }

@@ -54,8 +54,8 @@
                             </li>
                         </ul>
                         <hr />
-                        <form class="d-flex mt-3" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Szukaj" aria-label="Search">
+                        <form class="d-flex mt-3" role="search" method="get" asp-page="/Search">
+                            <input class="form-control me-2" type="search" name="query" placeholder="Szukaj" aria-label="Search">
                             <button class="btn btn-outline-dark" type="submit">Szukaj</button>
                         </form>
                     </div>
