@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace AlDentev2.Pages
 {
@@ -19,6 +20,7 @@ namespace AlDentev2.Pages
         private readonly ICartRepository _cartRepository;
         private readonly Services.IEmailSender _emailSender;
         private readonly ILogger<LoginPageModel> _logger;
+        
 
         public LoginPageModel(SignInManager<User> signInManager, UserManager<User> userManager, ICartRepository cartRepository, Services.IEmailSender emailSender, ILogger<LoginPageModel> logger)
         {
@@ -27,6 +29,7 @@ namespace AlDentev2.Pages
             _cartRepository = cartRepository;
             _emailSender = emailSender;
             _logger = logger;
+            
         }
 
         [BindProperty]
@@ -34,6 +37,8 @@ namespace AlDentev2.Pages
 
         [BindProperty]
         public RegisterInput RegisterInput { get; set; } = new RegisterInput();
+
+       
 
         [TempData]
         public string? StatusMessage { get; set; }
@@ -88,6 +93,8 @@ namespace AlDentev2.Pages
                 ActiveTab = "login";
                 return Page();
             }
+
+           
 
             var user = await _userManager.FindByEmailAsync(LoginInput.Email);
             if (user != null && !await _userManager.IsEmailConfirmedAsync(user))
@@ -234,6 +241,7 @@ namespace AlDentev2.Pages
             ActiveTab = "register";
             return Page();
         }
+        
 
         public async Task<IActionResult> OnGetConfirmEmailAsync(int userId, string code, string returnUrl = null)
         {
