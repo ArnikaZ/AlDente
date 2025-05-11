@@ -1,9 +1,16 @@
 ﻿@page
 @model AlDentev2.Pages.ContactFormModel
+@inject IConfiguration configuration
 @{
     ViewData["Title"] = "Kontakt";
+    var siteKey = configuration["ReCaptcha:SiteKey"];
 }
-
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+    function onSubmit(token) {
+      document.getElementById("contact_form_id").submit();
+    }
+</script>
 
 <div class="container mt-5">
     <div class="row">
@@ -20,7 +27,7 @@
                     @Model.StatusMessage
                 </div>
             }
-            <form method="post">
+            <form method="post" id="contact_form_id">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input.NameSurname" class="mb-1">Imię i nazwisko</label>
@@ -42,8 +49,13 @@
                     <textarea asp-for="Input.ContactText" class="form-control" rows="4" required></textarea>
                     <span asp-validation-for="Input.ContactText" class="text-danger"></span>
                 </div>
-                <div class="form-group text-center my-4">
-                    <button class="btn btn-dark" type="submit">Wyślij</button>
+                <div class="form-group text-center my-4 ">
+                    <button class="g-recaptcha btn btn-dark"
+                            data-sitekey="@siteKey"
+                            data-callback='onSubmit'
+                            data-action='submit'>
+                        Wyślij
+                    </button>
                 </div>
             </form>
         </div>

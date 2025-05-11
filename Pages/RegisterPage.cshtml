@@ -1,0 +1,83 @@
+﻿@page
+@inject IConfiguration configuration
+@model AlDentev2.Pages.RegisterPageModel
+@{
+    ViewData["Title"] = "Rejestracja";
+    var siteKey = configuration["ReCaptcha:SiteKey"];
+}
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+    function onSubmit(token) {
+      document.getElementById("register_form_id").submit();
+    }
+</script>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+            @if (Model.StatusMessage != null)
+            {
+                <div class="alert alert-secondary mb-4">
+                    @Model.StatusMessage
+                </div>
+            }
+
+
+            <div class="row justify-content-center">
+
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Zarejestruj się</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" asp-page-handler="Register" data-ajax="false" id="register_form_id">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                                <div class="mb-3">
+                                    <label asp-for="RegisterInput.Email" class="form-label">Adres e-mail</label>
+                                    <input asp-for="RegisterInput.Email" name="RegisterInput.Email" class="form-control" placeholder="Wprowadź e-mail" autocomplete="email">
+                                    <span asp-validation-for="RegisterInput.Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="RegisterInput.Password" class="form-label">Hasło</label>
+                                    <input asp-for="RegisterInput.Password" name="RegisterInput.Password" class="form-control" type="password" placeholder="Wprowadź hasło" autocomplete="new-password">
+                                    <span asp-validation-for="RegisterInput.Password" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="RegisterInput.ConfirmPassword" class="form-label">Powtórz hasło</label>
+                                    <input asp-for="RegisterInput.ConfirmPassword" name="RegisterInput.ConfirmPassword" class="form-control" type="password" placeholder="Powtórz hasło" autocomplete="new-password">
+                                    <span asp-validation-for="RegisterInput.ConfirmPassword" class="text-danger"></span>
+                                </div>
+
+                                <button class="g-recaptcha btn btn-dark w-100 mb-2"
+                                        data-sitekey="@siteKey"
+                                        data-callback='onSubmit'
+                                        data-action='submit'>
+                                    Stwórz konto
+                                </button>
+
+                                <div class="my-3">
+                                    <p>Nie otrzymałeś e-maila potwierdzającego? <a asp-page-handler="ResendConfirmation" asp-route-email="@Model.RegisterInput.Email ">Wyślij ponownie</a></p>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+

@@ -8,9 +8,11 @@ namespace AlDentev2.Pages
     public class ContactFormModel : PageModel
     {
         private readonly IEmailSender _emailSender;
-        public ContactFormModel(IEmailSender emailSender)
+        private readonly IConfiguration _configuration;
+        public ContactFormModel(IEmailSender emailSender, IConfiguration configuration)
         {
             _emailSender = emailSender;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -53,7 +55,15 @@ namespace AlDentev2.Pages
             {
                 return Page();
             }
-
+            string recaptchaToken = Request.Form["g-recaptcha-response"].ToString();
+            string secretKey = _configuration["ReCaptcha:SecretKey"]!;
+            string verificationUrl = _configuration["ReCaptcha:VerificationUrl"]!;
+            bool isValid = await RecaptchaService.VerifyRecaptcha(recaptchaToken, secretKey, verificationUrl);
+            if (!isValid)
+            {
+                StatusMessage = "Niepoprawna weryfikacja ReCaptcha";
+                return Page();
+            }
             try
             {
                 var htmlMessage = $@"<h3>Nowa wiadomoœæ z formularza kontaktowego</h3>

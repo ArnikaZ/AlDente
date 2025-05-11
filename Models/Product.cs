@@ -27,9 +27,9 @@ namespace AlDentev2.Models
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
 
-        public string? SKU { get; set; } //kod produktu
+        public string? SKU { get; set; } = string.Empty;
 
-        public ICollection<ProductSize>? ProductSizes { get; set; }
+        public ICollection<ProductSize> ProductSizes { get; set; }
        
     }
     public class ProductSize

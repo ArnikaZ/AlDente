@@ -58,10 +58,10 @@ namespace AlDentev2.Repositories
                 .Include(p => p.Category)
                 .Include(p => p.ProductSizes).ThenInclude(ps => ps.Size)
                 .Include(p => p.ProductImages)
-                .Where(p => p.Name.ToLower().Contains(query) ||
-                            p.Description.ToLower().Contains(query) ||
-                            p.SKU.ToLower().Contains(query) ||
-                            p.Category.Name.ToLower().Contains(query))
+                .Where(p => (p.Name != null && p.Name.ToLower().Contains(query)) ||
+                            (p.Description != null && p.Description.ToLower().Contains(query)) ||
+                            (p.SKU != null && p.SKU.Contains(query, StringComparison.CurrentCultureIgnoreCase)) ||
+                            (p.Category != null && p.Category.Name != null && p.Category.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase)))
                 .ToListAsync();
         }
     }
