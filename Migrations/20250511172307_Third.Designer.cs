@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlDentev2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250425083338_AddIdentityTables")]
-    partial class AddIdentityTables
+    [Migration("20250511172307_Third")]
+    partial class Third
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -50,7 +50,7 @@ namespace AlDentev2.Pages
             // Ustaw domyœlny SizeId = 7 ("Brak") dla produktów bez rozmiarów
             if (!availableSizes.Any())
             {
-                SizeId = 7; // Domyœlny rozmiar "Brak" dla toreb
+                SizeId = 5; // Domyœlny rozmiar "Brak" dla toreb
                 _logger.LogInformation("Ustawiono domyœlny SizeId=7 (Brak) dla produktu bez rozmiarów: ProductId={ProductId}", ProductId);
             }
 

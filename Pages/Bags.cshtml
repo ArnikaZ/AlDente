@@ -76,7 +76,7 @@
                     <p>@bag.Price.ToString("N2") PLN</p>
                     <form method="post" asp-page="/AddToCart">
                     <input type="hidden" name="ProductId" value="@bag.Id"/>
-                        <input type="hidden" name="SizeId" value="7" />
+                        <input type="hidden" name="SizeId" value="5" />
                     <div class="mb-3">
                         <label for="quantity-@bag.Id" class="visually-hidden">Ilość</label>
                         <input type="number"

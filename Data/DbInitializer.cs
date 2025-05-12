@@ -296,6 +296,15 @@ namespace AlDentev2.Data
                     });
                 }
             }
+            //foreach (var product in products.Where(p => p.CategoryId == categories.First(c => c.Name == "Torby").Id))
+            //{
+            //    productSizes.Add(new ProductSize
+            //    {
+            //        ProductId = product.Id,
+            //        SizeId = 5,
+            //        StockQuantity = 10
+            //    });
+            //}
             await context.ProductSizes.AddRangeAsync(productSizes);
             await context.SaveChangesAsync();
 
