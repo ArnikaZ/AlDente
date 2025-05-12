@@ -9,7 +9,7 @@ namespace AlDentev2.Data
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json")
                 .AddUserSecrets<Program>()
                 .Build();
 

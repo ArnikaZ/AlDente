@@ -15,6 +15,7 @@ namespace AlDentev2
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Configuration.AddUserSecrets<Program>();
 
             // Add services to the container.
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -49,13 +50,13 @@ namespace AlDentev2
             builder.Services.AddAuthentication()
             .AddGoogle(options =>
             {
-                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
             })
             .AddFacebook(options =>
             {
-                options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+                options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
+                options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
             });
 
 
@@ -83,19 +84,27 @@ namespace AlDentev2
             // Inicjalizacja bazy danych
             using (var scope = app.Services.CreateScope())
             {
-                var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
-                    await DbInitializer.InitializeAsync(context);
+                    var factory = new MigrationDbContextFactory();
+                    using var context = factory.CreateDbContext(null);
+                    await context.Database.MigrateAsync();
                 }
                 catch (Exception ex)
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "Error in initializing database");
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Error during database migration");
+                    throw; // Opcjonalnie: przerwij uruchamianie aplikacji lub kontynuuj w zale¿noœci od potrzeb
                 }
             }
-
+            if (app.Environment.IsDevelopment())
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    await DbInitializer.InitializeAsync(context);
+                }
+            }
             // Configure the HTTP request pipeline
             if (!app.Environment.IsDevelopment())
             {

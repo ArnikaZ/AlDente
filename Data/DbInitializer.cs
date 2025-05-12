@@ -8,8 +8,7 @@ namespace AlDentev2.Data
     {
         public static async Task InitializeAsync(ApplicationDbContext context)
         {
-            await context.Database.MigrateAsync(); //sprawdzenie czy baza danych istnieje i czy migracje zostały zastosowane / zastosowanie oczekujących mogracji (sprawdznie, czy  baza danych jest aktualna i zawiera wszystkie niezbędne tabele i relacje, zanim przystąpi do dodawania przykładowych danych
-            if (await context.Products.AnyAsync()) //jeśli są już produkty, oznacza to że baza danych została już zainicjowana
+            if (await context.Products.AnyAsync())
             {
                 return;
             }
