@@ -48,7 +48,6 @@
                                                 @if (!string.IsNullOrEmpty(address.AddressLine2))
                                                 {
                                                     <br />
-
                                                     @address.AddressLine2
                                                 }
                                             </td>
@@ -62,10 +61,16 @@
                                                 }
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-outline-dark me-2"
+                                                <button class="btn btn-sm btn-outline-dark me-2 edit-address-button"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#addressModal"
-                                                        onclick="loadAddress(@address.Id, '@address.AddressLine1', '@address.AddressLine2', '@address.City', '@address.PostalCode', '@address.Country', @address.IsDefault)">
+                                                        data-address-id="@address.Id"
+                                                        data-address-line1="@address.AddressLine1"
+                                                        data-address-line2="@address.AddressLine2"
+                                                        data-city="@address.City"
+                                                        data-postal-code="@address.PostalCode"
+                                                        data-country="@address.Country"
+                                                        data-is-default="@address.IsDefault.ToString().ToLower()">
                                                     Edytuj
                                                 </button>
                                                 @if (!address.IsDefault)
@@ -89,10 +94,9 @@
                             </table>
                         </div>
                     }
-                    <button class="btn btn-dark mt-3"
+                    <button class="btn btn-dark mt-3 add-address-button"
                             data-bs-toggle="modal"
-                            data-bs-target="#addressModal"
-                            onclick="clearForm()">
+                            data-bs-target="#addressModal">
                         Dodaj nowy adres
                     </button>
                 </div>
@@ -161,31 +165,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        function clearForm() {
-            console.log('Clearing form');
-            document.getElementById('Input_Id').value = '0';
-            document.getElementById('Input_AddressLine1').value = '';
-            document.getElementById('Input_AddressLine2').value = '';
-            document.getElementById('Input_City').value = '';
-            document.getElementById('Input_PostalCode').value = '';
-            document.getElementById('Input_Country').value = '';
-            document.getElementById('Input_IsDefault').checked = false;
-            document.querySelector('.modal-title').textContent = 'Dodaj adres';
-            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
-        }
-
-        function loadAddress(id, addressLine1, addressLine2, city, postalCode, country, isDefault) {
-            console.log('Loading address: ', id);
-            document.getElementById('Input_Id').value = id || '0';
-            document.getElementById('Input_AddressLine1').value = addressLine1 || '';
-            document.getElementById('Input_AddressLine2').value = addressLine2 || '';
-            document.getElementById('Input_City').value = city || '';
-            document.getElementById('Input_PostalCode').value = postalCode || '';
-            document.getElementById('Input_Country').value = country || '';
-            document.getElementById('Input_IsDefault').checked = isDefault || false;
-            document.querySelector('.modal-title').textContent = 'Edytuj adres';
-            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
-        }
-    </script>
 }

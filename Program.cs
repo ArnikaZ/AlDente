@@ -75,13 +75,40 @@ namespace AlDentev2
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-               options.Cookie.SameSite = SameSiteMode.Lax;
+               options.Cookie.SameSite = SameSiteMode.Strict;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             var app = builder.Build();
 
-            // Inicjalizacja bazy danych
+            app.Use(async (context, next) =>
+            {
+                var csp = "default-src 'self'; " +
+                          "script-src 'self' https://cdn.jsdelivr.net https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ ; " +
+                          "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'unsafe-hashes' 'sha256-aqNNdDLnnrDOnTNdkJpYlAxKVJtLt9CtFLklmInuUAE=' 'sha256-NHarn8wEqJqUQoKwsaJttWeSqzOSSPTy65p3Z6aS0Qs=' 'sha256-FJ70q/rOyGtVjs760UXock5Sd7Sb58E7hNt++vGP+5w=' 'sha256-6kmyWkdMnSnCJhCug/q/GhxflQ/fFQvTph5flwFCXlc=' 'sha256-8QkhJYL9zovWm/J9JEob9eStRUEcSD0wW1R3KJkTI7c=' 'sha256-JHifDLeo1FrY9lSi8/sIR91pHkTa67ozQWhP0zwLtlo=' ;  " +
+                          "font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; " +
+                          "img-src 'self' data:; " +
+                          "media-src 'self'; " +
+                          "connect-src 'self' https://www.google.com https://accounts.google.com https://www.facebook.com; " +
+                          "form-action 'self' https://accounts.google.com https://www.facebook.com; " +
+                          "frame-src 'self' https://www.google.com/recaptcha/; " +
+                          "object-src 'none'; " +
+                          "base-uri 'self'; " ;
+
+                // Dodaj Ÿród³a dla BrowserLink i Browser Refresh w œrodowisku deweloperskim
+                if (app.Environment.IsDevelopment())
+                {
+                    csp = csp.Replace(
+                        "connect-src 'self' https://www.google.com https://accounts.google.com https://www.facebook.com",
+                        "connect-src 'self' https://www.google.com https://accounts.google.com https://www.facebook.com http://localhost:* ws://localhost:* wss://localhost:*"
+                    );
+                }
+
+                context.Response.Headers.Append("Content-Security-Policy", csp);
+                await next();
+            });
+
+           
             using (var scope = app.Services.CreateScope())
             {
                 try

@@ -85,8 +85,8 @@
                                     var isAvailable = Model.IsSizeAvailable(hat.Id, size.Id);
                                     var stockQty = Model.GetStockQuantity(hat.Id, size.Id);
                                     <button type="button"
-                                            class="btn @(isAvailable ? "btn-outline-dark" : "btn-outline-secondary disabled")"
-                                            onclick="selectSize(this, @size.Id)"
+                                            class="btn size-button @(isAvailable ? "btn-outline-dark" : "btn-outline-secondary disabled")"
+                                            
                                             data-size-id="@size.Id"
                                             data-available="@isAvailable.ToString().ToLower()"
                                             title="@(isAvailable ? $"Dostępne: {stockQty} szt." : "Niedostępne")">
@@ -122,33 +122,3 @@
         }
     </div>
 </div>
-@section Scripts {
-    <script>
-        function selectSize(button, sizeId) {
-            // Pobierz wszystkie przyciski rozmiarów w tym samym formularzu
-            const form = button.closest('form');
-            const sizeButtons = form.querySelectorAll('button[data-size-id]');
-            const hiddenInput = form.querySelector('input[name="SizeId"]');
-            const addToCartBtn = form.querySelector('button[type="submit"]');
-
-            // Usuń klasę 'active' ze wszystkich przycisków
-            sizeButtons.forEach(btn => {
-                btn.classList.remove('btn-dark');
-                btn.classList.add('btn-outline-dark');
-            });
-
-            // Dodaj klasę 'active' do wybranego przycisku
-            const isAvailable = button.getAttribute('data-available') === 'true';
-            if (isAvailable) {
-                button.classList.remove('btn-outline-dark');
-                button.classList.add('btn-dark');
-
-                // Ustaw wartość ukrytego pola
-                hiddenInput.value = sizeId;
-
-                // Odblokuj przycisk "Dodaj do koszyka"
-                addToCartBtn.disabled = false;
-            }
-        }
-    </script>
-}
